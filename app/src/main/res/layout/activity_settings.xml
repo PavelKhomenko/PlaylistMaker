@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/back"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        tools:ignore="UseCompoundDrawables">
+
+        <ImageView
+            android:id="@+id/back_arrow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:src="@drawable/back_arrow">
+        </ImageView>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="28dp"
+            android:layout_marginTop="14dp"
+            android:fontFamily="@font/ys_text_medium_regular"
+            android:text="@string/settings"
+            android:textColor="@color/black_text"
+            android:textSize="@dimen/headers_text">
+        </com.google.android.material.textview.MaterialTextView>
+
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingStart="@dimen/padding_all_around"
+        android:paddingTop="@dimen/frame_padding"
+        android:paddingEnd="@dimen/padding_all_around"
+        android:paddingBottom="@dimen/frame_padding">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:fontFamily="@font/ys_text_regular"
+            android:gravity="start"
+            android:text="@string/dark_mode"
+            android:textColor="@color/black"
+            android:textSize="@dimen/small_text">
+        </com.google.android.material.textview.MaterialTextView>
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:layout_width="match_parent"
+            android:layout_height="27dp"
+            android:gravity="end">
+        </androidx.appcompat.widget.SwitchCompat>
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingStart="@dimen/padding_all_around"
+        android:paddingTop="@dimen/frame_padding"
+        android:paddingEnd="@dimen/padding_all_around"
+        android:paddingBottom="@dimen/frame_padding">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/ys_text_regular"
+            android:gravity="start"
+            android:text="@string/share"
+            android:textColor="@color/black"
+            android:textSize="@dimen/small_text">
+        </com.google.android.material.textview.MaterialTextView>
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="end"
+            android:scaleType="fitEnd"
+            android:src="@drawable/share">
+        </ImageView>
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingStart="@dimen/padding_all_around"
+        android:paddingTop="@dimen/frame_padding"
+        android:paddingEnd="@dimen/padding_all_around"
+        android:paddingBottom="@dimen/frame_padding">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/ys_text_regular"
+            android:gravity="start"
+            android:text="@string/support"
+            android:textColor="@color/black"
+            android:textSize="@dimen/small_text">
+        </com.google.android.material.textview.MaterialTextView>
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="end"
+            android:scaleType="fitEnd"
+            android:src="@drawable/baseline_support_agent_24">
+        </ImageView>
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingStart="@dimen/padding_all_around"
+        android:paddingTop="@dimen/frame_padding"
+        android:paddingEnd="@dimen/padding_all_around"
+        android:paddingBottom="@dimen/frame_padding">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/ys_text_regular"
+            android:gravity="start"
+            android:text="@string/user_agreement"
+            android:textColor="@color/black"
+            android:textSize="@dimen/small_text">
+        </com.google.android.material.textview.MaterialTextView>
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="end"
+            android:scaleType="fitEnd"
+            android:src="@drawable/next_arrow">
+        </ImageView>
+
+    </FrameLayout>
+
+</LinearLayout>
