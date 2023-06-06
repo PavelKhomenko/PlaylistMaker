@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="bottom_margin">10dp</dimen>
+    <dimen name="big_text">26sp</dimen>
+    <dimen name="small_text">16sp</dimen>
+    <dimen name="headers_text">22sp</dimen>
+    <dimen name="frame_padding">21dp</dimen>
+    <dimen name="corner_radius">16dp</dimen>
+    <dimen name="padding_all_around">16dp</dimen>
+</resources>
