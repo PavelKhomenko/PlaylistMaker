@@ -39,8 +39,8 @@
         android:layout_marginStart="@dimen/padding_all_around">
 
         <EditText
-            style="@style/EditTextStyle"
             android:id="@+id/search_input"
+            style="@style/EditTextStyle"
             android:drawableStart="@drawable/search"
             android:hint="@string/search">
         </EditText>
