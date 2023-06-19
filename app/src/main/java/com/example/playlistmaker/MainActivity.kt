@@ -1,9 +1,12 @@
 package com.example.playlistmaker
 
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.inputmethod.InputMethodManager
 import android.widget.Button
+import android.widget.EditText
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -12,11 +15,6 @@ class MainActivity : AppCompatActivity() {
 
         val search = findViewById<Button>(R.id.search)
         search.setOnClickListener {
-            /*Toast.makeText(
-                this@MainActivity,
-                "SEARCH BUTTON PRESSED",
-                Toast.LENGTH_SHORT
-            ).show()*/
             val displaySearchIntent = Intent(this, SearchActivity::class.java)
             startActivity(displaySearchIntent)
         }

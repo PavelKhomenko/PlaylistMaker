@@ -4,14 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
     <LinearLayout
         android:id="@+id/back"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        tools:ignore="UseCompoundDrawables">
+        android:orientation="horizontal">
 
         <ImageView
             android:id="@+id/back_arrow"
@@ -22,127 +22,76 @@
         </ImageView>
 
         <com.google.android.material.textview.MaterialTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            style="@style/TextHead"
             android:layout_marginStart="28dp"
             android:layout_marginTop="14dp"
-            android:fontFamily="@font/ys_text_medium_regular"
             android:text="@string/settings"
-            android:textColor="@color/black_text"
-            android:textSize="@dimen/headers_text">
+            android:textColor="?attr/colorOnSecondary">
         </com.google.android.material.textview.MaterialTextView>
 
     </LinearLayout>
 
     <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingStart="@dimen/padding_all_around"
-        android:paddingTop="@dimen/frame_padding"
-        android:paddingEnd="@dimen/padding_all_around"
-        android:paddingBottom="@dimen/frame_padding">
+        style="@style/FrameSettingsStyle">
 
         <com.google.android.material.textview.MaterialTextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:fontFamily="@font/ys_text_regular"
-            android:gravity="start"
-            android:text="@string/dark_mode"
-            android:textColor="@color/black"
-            android:textSize="@dimen/small_text">
+            style="@style/SettingsText"
+            android:text="@string/dark_mode">
         </com.google.android.material.textview.MaterialTextView>
 
-        <androidx.appcompat.widget.SwitchCompat
+        <com.google.android.material.switchmaterial.SwitchMaterial
             android:layout_width="match_parent"
             android:layout_height="27dp"
-            android:gravity="end">
-        </androidx.appcompat.widget.SwitchCompat>
+            android:gravity="end"
+            android:thumbTint="?attr/colorBackgroundFloating"
+            android:thumbTintMode="screen">
+        </com.google.android.material.switchmaterial.SwitchMaterial>
 
     </FrameLayout>
 
     <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingStart="@dimen/padding_all_around"
-        android:paddingTop="@dimen/frame_padding"
-        android:paddingEnd="@dimen/padding_all_around"
-        android:paddingBottom="@dimen/frame_padding">
+        style="@style/FrameSettingsStyle">
 
         <com.google.android.material.textview.MaterialTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/ys_text_regular"
-            android:gravity="start"
-            android:text="@string/share"
-            android:textColor="@color/black"
-            android:textSize="@dimen/small_text">
+            style="@style/SettingsText"
+            android:text="@string/share">
         </com.google.android.material.textview.MaterialTextView>
 
         <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="end"
-            android:scaleType="fitEnd"
+            android:id="@+id/share_app"
+            style="@style/SettingsImageStyle"
             android:src="@drawable/share">
         </ImageView>
 
     </FrameLayout>
 
     <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingStart="@dimen/padding_all_around"
-        android:paddingTop="@dimen/frame_padding"
-        android:paddingEnd="@dimen/padding_all_around"
-        android:paddingBottom="@dimen/frame_padding">
+        style="@style/FrameSettingsStyle">
 
         <com.google.android.material.textview.MaterialTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/ys_text_regular"
-            android:gravity="start"
-            android:text="@string/support"
-            android:textColor="@color/black"
-            android:textSize="@dimen/small_text">
+            style="@style/SettingsText"
+            android:text="@string/support">
         </com.google.android.material.textview.MaterialTextView>
 
         <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="end"
-            android:scaleType="fitEnd"
+            android:id="@+id/support"
+            style="@style/SettingsImageStyle"
             android:src="@drawable/baseline_support_agent_24">
         </ImageView>
 
     </FrameLayout>
 
     <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingStart="@dimen/padding_all_around"
-        android:paddingTop="@dimen/frame_padding"
-        android:paddingEnd="@dimen/padding_all_around"
-        android:paddingBottom="@dimen/frame_padding">
+        style="@style/FrameSettingsStyle">
 
         <com.google.android.material.textview.MaterialTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/ys_text_regular"
-            android:gravity="start"
-            android:text="@string/user_agreement"
-            android:textColor="@color/black"
-            android:textSize="@dimen/small_text">
+            style="@style/SettingsText"
+            android:text="@string/user_agreement">
         </com.google.android.material.textview.MaterialTextView>
 
         <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="end"
-            android:scaleType="fitEnd"
+            android:id="@+id/user_agrement"
+            style="@style/SettingsImageStyle"
             android:src="@drawable/next_arrow">
         </ImageView>
 

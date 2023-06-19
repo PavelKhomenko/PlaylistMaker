@@ -1,9 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SearchActivity">
+    android:orientation="vertical">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <LinearLayout
+        android:id="@+id/back"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/back_arrow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:src="@drawable/back_arrow">
+        </ImageView>
+
+        <com.google.android.material.textview.MaterialTextView
+            style="@style/TextHead"
+            android:layout_marginStart="28dp"
+            android:layout_marginTop="14dp"
+            android:layout_marginBottom="4dp"
+            android:text="@string/search"
+            android:textColor="?attr/colorOnSecondary">
+        </com.google.android.material.textview.MaterialTextView>
+
+    </LinearLayout>
+
+    <androidx.cardview.widget.CardView
+        style="@style/FrameSettingsStyle"
+        app:cardCornerRadius="@dimen/card_radius"
+        android:layout_marginEnd="@dimen/padding_all_around"
+        android:layout_marginStart="@dimen/padding_all_around">
+
+        <EditText
+            style="@style/EditTextStyle"
+            android:id="@+id/search_input"
+            android:drawableStart="@drawable/search"
+            android:hint="@string/search">
+        </EditText>
+
+        <ImageView
+            android:id="@+id/clear_text"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="end"
+            android:layout_marginEnd="@dimen/padding_all_around"
+            android:src="@drawable/clear"
+            android:visibility="invisible">
+        </ImageView>
+        
+    </androidx.cardview.widget.CardView>
+</LinearLayout>

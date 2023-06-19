@@ -6,5 +6,6 @@
     <dimen name="headers_text">22sp</dimen>
     <dimen name="frame_padding">21dp</dimen>
     <dimen name="corner_radius">16dp</dimen>
+    <dimen name="card_radius">8dp</dimen>
     <dimen name="padding_all_around">16dp</dimen>
 </resources>
