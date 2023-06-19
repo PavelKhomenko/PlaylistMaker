@@ -6,6 +6,7 @@
         <item name="colorPrimary">@color/yp_black</item>
         <item name="colorSecondary">@color/yp_black</item>
         <item name="color">@color/yp_white</item>
+        <item name="colorContainer">@color/yp_white</item>
         <item name="colorBackgroundFloating">@color/yp_blue</item>
         <item name="colorPrimaryVariant">@color/yp_black</item>
         <item name="colorSecondaryVariant">@color/yp_white</item>

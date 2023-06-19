@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/parent"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/songCover"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_marginStart="@dimen/tv_margin"
+        android:layout_marginTop="@dimen/iv_margin"
+        android:layout_marginEnd="@dimen/iv_margin"
+        android:layout_marginBottom="@dimen/iv_margin"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/songName"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/placeholder" />
+
+    <TextView
+        android:id="@+id/songName"
+        style="@style/SettingsText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/tv_margin"
+        android:layout_marginBottom="1dp"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:textColor="?attr/color"
+        app:layout_constraintBottom_toTopOf="@id/songArtist"
+        app:layout_constraintEnd_toStartOf="@+id/nextArrow"
+        app:layout_constraintStart_toEndOf="@id/songCover"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="No reply" />
+
+    <TextView
+        android:id="@+id/songArtist"
+        style="@style/SettingsText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/iv_margin"
+        android:textColor="?attr/colorContainer"
+        android:textSize="11sp"
+        app:layout_constraintBottom_toBottomOf="@id/songDuration"
+        app:layout_constraintStart_toEndOf="@id/songCover"
+        app:layout_constraintTop_toBottomOf="@id/songName"
+        tools:text="The Beatles" />
+
+    <ImageView
+        android:id="@+id/eyeIcon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/card_radius"
+        app:layout_constraintBottom_toBottomOf="@id/songArtist"
+        app:layout_constraintStart_toEndOf="@id/songArtist"
+        app:layout_constraintTop_toTopOf="@id/songArtist"
+        app:srcCompat="@drawable/eye" />
+
+    <TextView
+        android:id="@+id/songDuration"
+        style="@style/SettingsText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="?attr/colorContainer"
+        android:textSize="11sp"
+        app:layout_constraintBottom_toBottomOf="@id/eyeIcon"
+        app:layout_constraintStart_toEndOf="@id/eyeIcon"
+        app:layout_constraintTop_toTopOf="@id/eyeIcon"
+        tools:text="2:25" />
+
+    <ImageView
+        android:id="@+id/nextArrow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/iv_margin"
+        android:padding="@dimen/padding_all_around"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/next_arrow" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

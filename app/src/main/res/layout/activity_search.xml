@@ -41,6 +41,7 @@
         <EditText
             android:id="@+id/search_input"
             style="@style/EditTextStyle"
+            android:textSize="@dimen/small_text"
             android:drawableStart="@drawable/search"
             android:hint="@string/search">
         </EditText>
@@ -56,4 +57,16 @@
         </ImageView>
         
     </androidx.cardview.widget.CardView>
+    
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerSearch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        android:orientation="vertical"
+        android:layout_marginStart="13dp"
+        android:layout_marginTop="@dimen/padding_all_around"
+        android:layout_marginEnd="@dimen/padding_all_around">
+
+    </androidx.recyclerview.widget.RecyclerView>
 </LinearLayout>

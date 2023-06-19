@@ -7,5 +7,7 @@
     <dimen name="frame_padding">21dp</dimen>
     <dimen name="corner_radius">16dp</dimen>
     <dimen name="card_radius">8dp</dimen>
+    <dimen name="iv_margin">8dp</dimen>
+    <dimen name="tv_margin">14dp</dimen>
     <dimen name="padding_all_around">16dp</dimen>
 </resources>
