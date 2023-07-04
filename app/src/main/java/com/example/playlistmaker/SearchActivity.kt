@@ -10,10 +10,12 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.ImageView
+import androidx.core.widget.doOnTextChanged
 
 class SearchActivity : AppCompatActivity() {
 
     private lateinit var editText: EditText
+
     companion object {
         const val SEARCH_INPUT = "SEARCH_INPUT"
     }
@@ -22,42 +24,29 @@ class SearchActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
 
-        val back = findViewById<View>(R.id.back)
-        back.setOnClickListener {
-            startActivity(Intent(this, MainActivity::class.java))
-        }
-
-        editText = findViewById(R.id.search_input)
-        if (savedInstanceState != null) {
-            val savedText = savedInstanceState.getString(SEARCH_INPUT)
-            editText.setText(savedText)
-        }
-        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        editText.requestFocus()
-        imm.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT)
-
-        val clearButton = findViewById<ImageView>(R.id.clear_text)
-
-        editText.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                if (p0.isNullOrEmpty()) {
-                    clearButton.visibility = View.INVISIBLE
-                } else {
-                    clearButton.visibility = View.VISIBLE
-                }
+        val back = findViewById<View>(R.id.back).apply {
+            setOnClickListener {
+                finish()
             }
-            override fun afterTextChanged(p0: Editable?) {}
-        })
-
-        clearButton.setOnClickListener {
-            editText.text = null
-            val inputMethodManager =
-                getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
-            inputMethodManager?.hideSoftInputFromWindow(editText.windowToken, 0)
-            clearButton.requestFocus()
         }
 
+        val clearButton = findViewById<ImageView>(R.id.clear_text).apply {
+            setOnClickListener {
+                editText.text = null
+                val inputMethodManager =
+                    getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+                inputMethodManager?.hideSoftInputFromWindow(editText.windowToken, 0)
+            }
+        }
+
+        editText = findViewById<EditText?>(R.id.search_input).apply { requestFocus() }
+        editText.doOnTextChanged { text, _, _, _ ->
+            if (text.isNullOrEmpty()) {
+                clearButton.visibility = View.INVISIBLE
+            } else {
+                clearButton.visibility = View.VISIBLE
+            }
+        }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -71,6 +60,4 @@ class SearchActivity : AppCompatActivity() {
         val savedText = savedInstanceState.getString(SEARCH_INPUT)
         editText.setText(savedText)
     }
-
-
 }
