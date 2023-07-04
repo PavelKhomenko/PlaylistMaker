@@ -31,7 +31,7 @@
         android:singleLine="true"
         android:textColor="?attr/color"
         app:layout_constraintBottom_toTopOf="@id/songArtist"
-        app:layout_constraintEnd_toStartOf="@+id/nextArrow"
+        app:layout_constraintEnd_toStartOf="@id/nextArrow"
         app:layout_constraintStart_toEndOf="@id/songCover"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="No reply" />
@@ -39,12 +39,15 @@
     <TextView
         android:id="@+id/songArtist"
         style="@style/SettingsText"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/iv_margin"
+        android:ellipsize="end"
+        android:maxLines="1"
         android:textColor="?attr/colorContainer"
         android:textSize="@dimen/text_11sp"
         app:layout_constraintBottom_toBottomOf="@id/songDuration"
+        app:layout_constraintHorizontal_bias="0"
         app:layout_constraintStart_toEndOf="@id/songCover"
         app:layout_constraintTop_toBottomOf="@id/songName"
         tools:text="The Beatles" />

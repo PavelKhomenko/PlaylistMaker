@@ -14,4 +14,7 @@
     <string name="practicum_link">"https://practicum.yandex.ru/android-developer/"</string>
     <string name="developer_email">"pavelKhomenko8@gmail.com"</string>
     <string name="user_agreement_link">"https://yandex.ru/legal/practicum_offer/"</string>
+    <string name="nothing_found">Ничего не нашлось</string>
+    <string name="connections_issue">Проблемы со связью \n\nЗагрузка не удалась проверьте подключение к интернету</string>
+    <string name="refresh">Обновить</string>
 </resources>

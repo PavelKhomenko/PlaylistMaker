@@ -19,6 +19,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
             android:src="@drawable/back_arrow">
+
         </ImageView>
 
         <com.google.android.material.textview.MaterialTextView
@@ -28,22 +29,26 @@
             android:layout_marginBottom="4dp"
             android:text="@string/search"
             android:textColor="?attr/colorOnSecondary">
+
         </com.google.android.material.textview.MaterialTextView>
 
     </LinearLayout>
 
     <androidx.cardview.widget.CardView
         style="@style/FrameSettingsStyle"
-        app:cardCornerRadius="@dimen/card_radius"
+        android:layout_marginStart="@dimen/padding_all_around"
         android:layout_marginEnd="@dimen/padding_all_around"
-        android:layout_marginStart="@dimen/padding_all_around">
+        app:cardCornerRadius="@dimen/card_radius">
 
         <EditText
             android:id="@+id/search_input"
             style="@style/EditTextStyle"
-            android:textSize="@dimen/small_text"
             android:drawableStart="@drawable/search"
-            android:hint="@string/search">
+            android:hint="@string/search"
+            android:imeOptions="actionDone"
+            android:singleLine="true"
+            android:textSize="@dimen/text_16sp">
+
         </EditText>
 
         <ImageView
@@ -54,19 +59,35 @@
             android:layout_marginEnd="@dimen/padding_all_around"
             android:src="@drawable/clear"
             android:visibility="invisible">
-        </ImageView>
-        
-    </androidx.cardview.widget.CardView>
-    
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerSearch"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        android:orientation="vertical"
-        android:layout_marginStart="13dp"
-        android:layout_marginTop="@dimen/padding_all_around"
-        android:layout_marginEnd="@dimen/padding_all_around">
 
-    </androidx.recyclerview.widget.RecyclerView>
+        </ImageView>
+
+    </androidx.cardview.widget.CardView>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerSearch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/padding_all_around"
+
+            tools:listitem="@layout/track_view"
+            android:orientation="vertical"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager">
+
+        </androidx.recyclerview.widget.RecyclerView>
+
+        <include layout="@layout/error_nothing_found"
+            android:id="@+id/error_nothing_found"
+            android:visibility="invisible"/>
+
+        <include layout="@layout/error_no_connection"
+            android:id="@+id/error_no_connection"
+            android:visibility="invisible"/>
+
+    </FrameLayout>
 </LinearLayout>
