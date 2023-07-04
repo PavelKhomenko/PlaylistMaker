@@ -9,5 +9,7 @@
     <dimen name="card_radius">8dp</dimen>
     <dimen name="iv_margin">8dp</dimen>
     <dimen name="tv_margin">14dp</dimen>
+    <dimen name="cover_size">45dp</dimen>
+    <dimen name="text_11sp">11sp</dimen>
     <dimen name="padding_all_around">16dp</dimen>
 </resources>

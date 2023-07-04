@@ -14,17 +14,17 @@ class TrackViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     private val tvSongArtist: TextView = itemView.findViewById(R.id.songArtist)
     private val tvSongDuration: TextView = itemView.findViewById(R.id.songDuration)
 
-    fun bind(model: Track) {
+    fun bind(track: Track) {
         Glide.with(itemView)
-            .load(model.artworkUrl100)
+            .load(track.artworkUrl100)
             .placeholder(R.drawable.placeholder)
-            .transform(RoundedCorners(25))
+            .transform(RoundedCorners(32))
             .centerInside()
             .into(ivSongCover)
 
-        tvSongName.text = model.trackName
-        tvSongArtist.text = model.artistName
-        tvSongDuration.text = model.trackTime
+        tvSongName.text = track.trackName
+        tvSongArtist.text = track.artistName
+        tvSongDuration.text = track.trackTime
     }
 
 }

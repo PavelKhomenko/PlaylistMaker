@@ -8,8 +8,8 @@
 
     <ImageView
         android:id="@+id/songCover"
-        android:layout_width="45dp"
-        android:layout_height="45dp"
+        android:layout_width="@dimen/cover_size"
+        android:layout_height="@dimen/cover_size"
         android:layout_marginStart="@dimen/tv_margin"
         android:layout_marginTop="@dimen/iv_margin"
         android:layout_marginEnd="@dimen/iv_margin"
@@ -43,7 +43,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/iv_margin"
         android:textColor="?attr/colorContainer"
-        android:textSize="11sp"
+        android:textSize="@dimen/text_11sp"
         app:layout_constraintBottom_toBottomOf="@id/songDuration"
         app:layout_constraintStart_toEndOf="@id/songCover"
         app:layout_constraintTop_toBottomOf="@id/songName"
@@ -65,7 +65,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="?attr/colorContainer"
-        android:textSize="11sp"
+        android:textSize="@dimen/text_11sp"
         app:layout_constraintBottom_toBottomOf="@id/eyeIcon"
         app:layout_constraintStart_toEndOf="@id/eyeIcon"
         app:layout_constraintTop_toTopOf="@id/eyeIcon"
