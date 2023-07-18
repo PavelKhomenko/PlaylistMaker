@@ -68,13 +68,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerSearch"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/padding_all_around"
-
+            android:visibility="gone"
             tools:listitem="@layout/track_view"
             android:orientation="vertical"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager">
@@ -83,11 +82,11 @@
 
         <include layout="@layout/error_nothing_found"
             android:id="@+id/error_nothing_found"
-            android:visibility="invisible"/>
+            android:visibility="gone"/>
 
         <include layout="@layout/error_no_connection"
             android:id="@+id/error_no_connection"
-            android:visibility="invisible"/>
+            android:visibility="gone"/>
 
     </FrameLayout>
 </LinearLayout>

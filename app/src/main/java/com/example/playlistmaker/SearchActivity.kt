@@ -12,7 +12,6 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import androidx.core.widget.doOnTextChanged
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import retrofit2.Call
 import retrofit2.Callback
@@ -36,6 +35,7 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var queryInput: EditText
     private lateinit var back: View
     private lateinit var clearButton: ImageView
+    private lateinit var rvTrack: RecyclerView
 
     companion object {
         const val SEARCH_INPUT = "SEARCH_INPUT"
@@ -73,21 +73,16 @@ class SearchActivity : AppCompatActivity() {
             setOnClickListener { search() }
         }
 
-        adapter.tracks = tracks
-
-        val rvTrack = findViewById<RecyclerView>(R.id.recyclerSearch)
-        rvTrack.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-        rvTrack.adapter = adapter
-
         queryInput.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-                Log.d("TRANSLATION_LOG", "Status code: ${queryInput.text.toString()}")
                 search()
-                true
             }
             false
         }
 
+        adapter.tracks = tracks
+        rvTrack = findViewById(R.id.recyclerSearch)
+        rvTrack.adapter = adapter
     }
 
     private fun search() {
@@ -95,22 +90,25 @@ class SearchActivity : AppCompatActivity() {
         val networkIssue = findViewById<View>(R.id.error_no_connection)
         itunesService.search(queryInput.text.toString())
             .enqueue(object : Callback<TrackResponse> {
+                @SuppressLint("NotifyDataSetChanged")
                 override fun onResponse(
                     call: Call<TrackResponse>,
                     response: Response<TrackResponse>
                 ) {
-                    Log.d("RESPONSE", "Status code: ${response.body()?.result}")
-                    Log.d("RESPONSE", "Status code: ${response.code()}")
+                    Log.d("RESPONSE_CODE", "Status code: ${response.code()}")
+                    Log.d("RESPONSE_BODY", "Status code: ${response.body()?.results}")
                     if (response.code() == 200) {
                         tracks.clear()
-                        if (response.body()?.result?.isNotEmpty() == true) {
-                            tracks.addAll(response.body()?.result!!)
+                        if (response.body()?.results?.isNotEmpty() == true) {
+                            tracks.addAll(response.body()?.results!!)
                             adapter.notifyDataSetChanged()
+                            rvTrack.visibility = View.VISIBLE
                             nothingFound.visibility = View.GONE
                             networkIssue.visibility = View.GONE
                         }
                         if (tracks.isEmpty()) {
                             nothingFound.visibility = View.VISIBLE
+                            rvTrack.visibility = View.GONE
                             networkIssue.visibility = View.GONE
                         }
                     }
@@ -118,6 +116,7 @@ class SearchActivity : AppCompatActivity() {
 
                 override fun onFailure(call: Call<TrackResponse>, t: Throwable) {
                     networkIssue.visibility = View.VISIBLE
+                    rvTrack.visibility = View.GONE
                     nothingFound.visibility = View.GONE
                 }
 

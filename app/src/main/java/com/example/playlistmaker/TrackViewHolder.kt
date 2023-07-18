@@ -6,6 +6,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import java.sql.Date
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -24,7 +25,8 @@ class TrackViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             .centerInside()
             .into(ivSongCover)
 
-        val convertTime =  SimpleDateFormat("mm:ss", Locale.getDefault()).format(track.trackTime)
+
+        val convertTime = SimpleDateFormat("mm:ss", Locale.getDefault()).format(293000L)
 
         tvSongName.text = track.trackName
         tvSongArtist.text = track.artistName
