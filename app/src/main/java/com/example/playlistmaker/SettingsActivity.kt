@@ -49,7 +49,7 @@ class SettingsActivity : AppCompatActivity() {
             }
         }
 
-        val userAgreement = findViewById<ImageView>(R.id.user_agrement).apply {
+        val userAgreement = findViewById<ImageView>(R.id.user_agreement).apply {
             setOnClickListener {
                 val url = Uri.parse(getString(R.string.user_agreement_link))
                 startActivity(Intent(Intent.ACTION_VIEW, url))
