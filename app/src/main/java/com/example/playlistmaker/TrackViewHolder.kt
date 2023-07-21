@@ -29,11 +29,8 @@ class TrackViewHolder(parentView: ViewGroup) : RecyclerView.ViewHolder(
             .transform(RoundedCorners(2))
             .centerInside()
             .into(ivSongCover)
-
-        val convertTime = SimpleDateFormat("mm:ss", Locale.getDefault()).format(track.trackTime)
-
         tvSongName.text = track.trackName
         tvSongArtist.text = track.artistName
-        tvSongDuration.text = convertTime
+        tvSongDuration.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(track.trackTime)
     }
 }
