@@ -19,6 +19,7 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
+const val SUCCESS = 200
 class SearchActivity : AppCompatActivity() {
 
     private val itunesBaseUrl = "https://itunes.apple.com"
@@ -39,6 +40,12 @@ class SearchActivity : AppCompatActivity() {
 
     companion object {
         const val SEARCH_INPUT = "SEARCH_INPUT"
+    }
+
+    enum class SearchStatus {
+        CONNECTION_ERROR,
+        EMPTY_SEARCH,
+        SUCCESS
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -86,8 +93,6 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun search() {
-        val nothingFound = findViewById<View>(R.id.error_nothing_found)
-        val networkIssue = findViewById<View>(R.id.error_no_connection)
         itunesService.search(queryInput.text.toString())
             .enqueue(object : Callback<TrackResponse> {
                 @SuppressLint("NotifyDataSetChanged")
@@ -97,31 +102,48 @@ class SearchActivity : AppCompatActivity() {
                 ) {
                     Log.d("RESPONSE_CODE", "Status code: ${response.code()}")
                     Log.d("RESPONSE_BODY", "Status code: ${response.body()?.results}")
-                    if (response.code() == 200) {
+                    if (response.code() == SUCCESS) {
                         tracks.clear()
                         if (response.body()?.results?.isNotEmpty() == true) {
                             tracks.addAll(response.body()?.results!!)
                             adapter.notifyDataSetChanged()
-                            rvTrack.visibility = View.VISIBLE
-                            nothingFound.visibility = View.GONE
-                            networkIssue.visibility = View.GONE
+                            setStatus(SearchStatus.SUCCESS)
                         }
                         if (tracks.isEmpty()) {
-                            nothingFound.visibility = View.VISIBLE
-                            rvTrack.visibility = View.GONE
-                            networkIssue.visibility = View.GONE
+                            setStatus(SearchStatus.EMPTY_SEARCH)
                         }
                     }
                 }
 
                 override fun onFailure(call: Call<TrackResponse>, t: Throwable) {
-                    networkIssue.visibility = View.VISIBLE
-                    rvTrack.visibility = View.GONE
-                    nothingFound.visibility = View.GONE
+                    setStatus(SearchStatus.CONNECTION_ERROR)
                 }
 
             })
     }
+
+    private fun setStatus(status: SearchStatus) {
+        val nothingFound = findViewById<View>(R.id.error_nothing_found)
+        val networkIssue = findViewById<View>(R.id.error_no_connection)
+        when (status) {
+            SearchStatus.CONNECTION_ERROR -> {
+                networkIssue.visibility = View.VISIBLE
+                rvTrack.visibility = View.GONE
+                nothingFound.visibility = View.GONE
+            }
+            SearchStatus.EMPTY_SEARCH -> {
+                nothingFound.visibility = View.VISIBLE
+                networkIssue.visibility = View.GONE
+                rvTrack.visibility = View.GONE
+            }
+            SearchStatus.SUCCESS -> {
+                rvTrack.visibility = View.VISIBLE
+                networkIssue.visibility = View.GONE
+                nothingFound.visibility = View.GONE
+            }
+        }
+    }
+
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)

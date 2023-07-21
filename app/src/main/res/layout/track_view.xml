@@ -72,7 +72,7 @@
         app:layout_constraintBottom_toBottomOf="@id/eyeIcon"
         app:layout_constraintStart_toEndOf="@id/eyeIcon"
         app:layout_constraintTop_toTopOf="@id/eyeIcon"
-        tools:text="2:25" />
+        tools:text="02:25" />
 
     <ImageView
         android:id="@+id/nextArrow"
