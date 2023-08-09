@@ -115,6 +115,7 @@ class SearchActivity : AppCompatActivity() {
         queryInput.apply { requestFocus() }
         queryInput.doOnTextChanged { text, _, _, _ ->
             if (text.isNullOrEmpty()) {
+                ivClearInputText.visibility = View.GONE
                 if (historyTracks.isEmpty()) {
                     setStatus(SearchStatus.ALL_GONE)
                 } else setStatus(SearchStatus.HISTORY)
