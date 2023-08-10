@@ -80,6 +80,10 @@
 
         </androidx.recyclerview.widget.RecyclerView>
 
+        <include layout="@layout/search_history_fragment"
+            android:id="@+id/search_history_fragment"
+            android:visibility="gone"/>
+
         <include layout="@layout/error_nothing_found"
             android:id="@+id/error_nothing_found"
             android:visibility="gone"/>
