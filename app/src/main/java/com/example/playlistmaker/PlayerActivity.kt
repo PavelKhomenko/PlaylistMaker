@@ -41,6 +41,7 @@ class PlayerActivity : AppCompatActivity() {
         Glide.with(this)
             .load(track.artworkUrl100?.replaceAfterLast(DELIMITER, PROPER_DIMENSIONS))
             .placeholder(R.drawable.placeholder)
+            .centerInside()
             .transform(RoundedCorners(this.resources.getDimensionPixelSize(R.dimen.margin_8dp)))
             .into(ivSongCover)
 
