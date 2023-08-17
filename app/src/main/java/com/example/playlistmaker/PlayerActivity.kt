@@ -11,6 +11,10 @@ import com.example.playlistmaker.SearchActivity.Companion.SEARCH_INPUT_KEY
 import java.text.SimpleDateFormat
 import java.util.Locale
 
+const val FOUR = 4
+const val ZERO = 0
+const val DELIMITER = '/'
+const val PROPER_DIMENSIONS = "512x512bb.jpg"
 class PlayerActivity : AppCompatActivity() {
 
     private lateinit var track: Track
@@ -35,10 +39,9 @@ class PlayerActivity : AppCompatActivity() {
         track = intent.getParcelableExtra<Track>(SEARCH_INPUT_KEY) ?: return
 
         Glide.with(this)
-            .load(track.artworkUrl100?.replaceAfterLast('/', "512x512bb.jpg"))
+            .load(track.artworkUrl100?.replaceAfterLast(DELIMITER, PROPER_DIMENSIONS))
             .placeholder(R.drawable.placeholder)
-            .transform(RoundedCorners(8))
-            .centerInside()
+            .transform(RoundedCorners(this.resources.getDimensionPixelSize(R.dimen.margin_8dp)))
             .into(ivSongCover)
 
         tvSongDuration.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(track.trackTime)
@@ -49,7 +52,7 @@ class PlayerActivity : AppCompatActivity() {
 
         tvSongName.text = track.trackName
         tvSongArtist.text = track.artistName
-        tvSongYear.text = track.releaseDate.subSequence(0, 4)
+        tvSongYear.text = track.releaseDate.subSequence(ZERO, FOUR)
         tvSongGenre.text = track.primaryGenreName
         tvSongCountry.text = track.country
     }

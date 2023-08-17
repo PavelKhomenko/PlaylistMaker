@@ -17,6 +17,7 @@
     <dimen name="margin_34dp">34dp</dimen>
     <dimen name="dp_30">30dp</dimen>
     <dimen name="margin_24dp">24dp</dimen>
+    <dimen name="dp_20">20dp</dimen>
     <dimen name="frame_padding">21dp</dimen>
     <dimen name="margin_18dp">18dp</dimen>
     <dimen name="corner_radius">16dp</dimen>

@@ -35,7 +35,7 @@
     </LinearLayout>
 
     <androidx.cardview.widget.CardView
-        style="@style/FrameSettingsStyle"
+        style="@style/CardViewStyle"
         android:layout_marginStart="@dimen/padding_all_around"
         android:layout_marginEnd="@dimen/padding_all_around"
         app:cardCornerRadius="@dimen/card_radius">
@@ -45,6 +45,7 @@
             style="@style/EditTextStyle"
             android:drawableStart="@drawable/search"
             android:hint="@string/search"
+            android:gravity="center_vertical"
             android:imeOptions="actionDone"
             android:singleLine="true"
             android:textSize="@dimen/text_16sp">
