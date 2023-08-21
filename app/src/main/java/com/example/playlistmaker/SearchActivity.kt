@@ -2,6 +2,7 @@ package com.example.playlistmaker
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -12,7 +13,6 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
-import android.widget.Toast
 import androidx.core.widget.doOnTextChanged
 import androidx.recyclerview.widget.RecyclerView
 import retrofit2.Call
@@ -20,8 +20,6 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-
-const val SUCCESS = 200
 
 class SearchActivity : AppCompatActivity() {
 
@@ -84,17 +82,22 @@ class SearchActivity : AppCompatActivity() {
 
         val trackAdapter = TrackAdapter {
             addToRecentHistoryList(it)
-            //переход на трек + удалить тост
-            Toast.makeText(this, "clicked", Toast.LENGTH_LONG).show()
+            transferDataToPlayerActivity(it)
         }
         trackAdapter.recentTracks = tracks
         rvTrack.adapter = trackAdapter
 
         val historyTrackAdapter = TrackAdapter {
-            //переход на трек
+            transferDataToPlayerActivity(it)
         }
         historyTrackAdapter.recentTracks = historyTracks
         rvHistoryTrack.adapter = historyTrackAdapter
+    }
+
+    private fun transferDataToPlayerActivity(track: Track) {
+        val intent: Intent = Intent(this, PlayerActivity::class.java)
+        intent.putExtra(SEARCH_INPUT_KEY, track)
+        startActivity(intent)
     }
 
     private fun setupListeners() {
@@ -254,17 +257,18 @@ class SearchActivity : AppCompatActivity() {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         val searchText = queryInput.text.toString()
-        outState.putString(SEARCH_INPUT, searchText)
+        outState.putString(SEARCH_INPUT_KEY, searchText)
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
-        val savedText = savedInstanceState.getString(SEARCH_INPUT)
+        val savedText = savedInstanceState.getString(SEARCH_INPUT_KEY)
         queryInput.setText(savedText)
     }
 
     companion object {
-        const val SEARCH_INPUT = "SEARCH_INPUT"
+        const val SEARCH_INPUT_KEY = "SEARCH_INPUT"
+        const val SUCCESS = 200
     }
 
     enum class SearchStatus {
