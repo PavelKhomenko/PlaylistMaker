@@ -19,62 +19,13 @@
         android:orientation="vertical"
         app:layout_constraintGuide_end="@dimen/margin_24dp" />
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/top_guideline"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.08" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/center_guideline"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.51" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/top_song_name_guideline"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.535" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/top_song_artist_guideline"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.573" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/bottom_main_text_guideline"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.63" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/bottom_tools_guideline"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.76" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/top_additional_text_guideline"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.81" />
-
     <ImageView
         android:id="@+id/back_arrow"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/margin_16dp"
         android:src="@drawable/back_arrow"
-        app:layout_constraintBottom_toBottomOf="@id/top_guideline"
+        app:layout_constraintBottom_toTopOf="@id/cover"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -82,26 +33,28 @@
         android:id="@+id/cover"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="@id/center_guideline"
+        android:layout_marginTop="@dimen/dp_26"
+        app:layout_constraintBottom_toTopOf="@id/song_name"
+        app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintEnd_toEndOf="@id/right_guideline"
         app:layout_constraintStart_toStartOf="@id/left_guideline"
-        app:layout_constraintTop_toTopOf="@id/top_guideline"
+        app:layout_constraintTop_toBottomOf="@id/back_arrow"
         tools:src="@drawable/placeholder" />
 
     <TextView
         android:id="@+id/song_name"
         style="@style/TextHead"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/margin_24dp"
+        android:layout_marginTop="@dimen/margin_24dp"
         android:ellipsize="end"
         android:lines="1"
         android:textColor="?attr/color"
         app:layout_constrainedWidth="true"
-        app:layout_constraintTop_toBottomOf="@id/top_song_name_guideline"
         app:layout_constraintEnd_toEndOf="@id/right_guideline"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@id/left_guideline"
+        app:layout_constraintTop_toBottomOf="@id/cover"
         tools:text="Yesterday(Remastered 2009)" />
 
     <TextView
@@ -109,6 +62,7 @@
         style="@style/TextHead"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_12dp"
         android:ellipsize="end"
         android:lines="1"
         android:textColor="?attr/color"
@@ -117,21 +71,20 @@
         app:layout_constraintEnd_toEndOf="@id/right_guideline"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@id/left_guideline"
-        app:layout_constraintTop_toBottomOf="@id/top_song_artist_guideline"
+        app:layout_constraintTop_toBottomOf="@id/song_name"
         tools:text="Yesterday(Remastered 2009)" />
 
 
     <androidx.constraintlayout.helper.widget.Flow
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_30"
         app:constraint_referenced_ids="save_button,play_button,like_button"
         app:flow_horizontalStyle="spread_inside"
         app:flow_wrapMode="chain"
         app:layout_constraintEnd_toEndOf="@id/right_guideline"
         app:layout_constraintStart_toStartOf="@id/left_guideline"
-        app:layout_constraintTop_toBottomOf="@id/bottom_main_text_guideline"
-
-        />
+        app:layout_constraintTop_toBottomOf="@id/song_artist" />
 
     <ImageView
         android:id="@+id/save_button"
@@ -161,7 +114,7 @@
         android:textSize="@dimen/text_14sp"
         app:layout_constraintEnd_toStartOf="@id/right_guideline"
         app:layout_constraintStart_toEndOf="@id/left_guideline"
-        app:layout_constraintTop_toBottomOf="@id/bottom_tools_guideline"
+        app:layout_constraintTop_toBottomOf="@id/play_button"
         tools:text="0:17" />
 
     <TextView
@@ -169,9 +122,10 @@
         style="@style/DescriptionTextStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_30"
         android:text="@string/duration"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/top_additional_text_guideline" />
+        app:layout_constraintTop_toBottomOf="@id/time_played" />
 
     <TextView
         android:id="@+id/album_title"
@@ -206,18 +160,20 @@
         style="@style/DescriptionTextStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
         android:text="@string/country"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/genre_title" />
+        app:layout_constraintTop_toBottomOf="@id/genre_title"
+        app:layout_constraintVertical_bias="0" />
 
     <TextView
         android:id="@+id/duration"
         style="@style/ServerDataTextStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_30"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/top_additional_text_guideline"
+        app:layout_constraintTop_toBottomOf="@id/time_played"
         tools:text="5:35" />
 
     <TextView
@@ -259,8 +215,10 @@
         style="@style/ServerDataTextStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/genre"
+        app:layout_constraintVertical_bias="0"
         tools:text="Великобритания" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
