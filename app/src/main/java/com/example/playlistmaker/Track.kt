@@ -6,6 +6,7 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class Track(
+    val previewUrl: String,
     val trackId: String,
     val trackName: String,
     val artistName: String?,

@@ -5,6 +5,8 @@ import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.View
 import android.view.inputmethod.EditorInfo
@@ -13,6 +15,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.ProgressBar
 import androidx.core.widget.doOnTextChanged
 import androidx.recyclerview.widget.RecyclerView
 import retrofit2.Call
@@ -29,6 +32,7 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var ivClearInputText: ImageView
     private lateinit var clearHistoryButton: Button
     private lateinit var refresh: Button
+    private lateinit var progressBar: ProgressBar
 
     private lateinit var rvTrack: RecyclerView
     private lateinit var rvHistoryTrack: RecyclerView
@@ -41,6 +45,10 @@ class SearchActivity : AppCompatActivity() {
 
     private val tracks = ArrayList<Track>()
     private val historyTracks = ArrayList<Track>()
+
+    private var isClickAllowed = true
+    private val handler = Handler(Looper.getMainLooper())
+    private val searchRunnable = Runnable { search() }
 
     //Retrofit set up
     private val itunesBaseUrl = "https://itunes.apple.com"
@@ -67,6 +75,7 @@ class SearchActivity : AppCompatActivity() {
         queryInput = findViewById(R.id.search_input)
         refresh = findViewById(R.id.refreshButton)
         clearHistoryButton = findViewById(R.id.delete_history_button)
+        progressBar = findViewById(R.id.progressBar)
         rvTrack = findViewById(R.id.recyclerSearch)
         rvHistoryTrack = findViewById(R.id.recycler_history)
         nothingFound = findViewById(R.id.error_nothing_found)
@@ -81,14 +90,18 @@ class SearchActivity : AppCompatActivity() {
             searchHistoryFragment.visibility = View.VISIBLE
 
         val trackAdapter = TrackAdapter {
-            addToRecentHistoryList(it)
-            transferDataToPlayerActivity(it)
+            if (clickDebounce()) {
+                addToRecentHistoryList(it)
+                transferDataToPlayerActivity(it)
+            }
         }
         trackAdapter.recentTracks = tracks
         rvTrack.adapter = trackAdapter
 
         val historyTrackAdapter = TrackAdapter {
-            transferDataToPlayerActivity(it)
+            if (clickDebounce()) {
+                transferDataToPlayerActivity(it)
+            }
         }
         historyTrackAdapter.recentTracks = historyTracks
         rvHistoryTrack.adapter = historyTrackAdapter
@@ -123,6 +136,7 @@ class SearchActivity : AppCompatActivity() {
                     setStatus(SearchStatus.ALL_GONE)
                 } else setStatus(SearchStatus.HISTORY)
             } else {
+                searchDebounce()
                 ivClearInputText.visibility = View.VISIBLE
                 searchHistoryFragment.visibility = View.GONE
             }
@@ -159,42 +173,68 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun search() {
-        itunesService.search(queryInput.text.toString())
-            .enqueue(object : Callback<TrackResponse> {
-                @SuppressLint("NotifyDataSetChanged")
-                override fun onResponse(
-                    call: Call<TrackResponse>,
-                    response: Response<TrackResponse>
-                ) {
-                    Log.d("RESPONSE_CODE", "Status code: ${response.code()}")
-                    Log.d("RESPONSE_BODY", "Status code: ${response.body()?.results}")
-                    if (response.code() == SUCCESS) {
-                        tracks.clear()
-                        if (response.body()?.results?.isNotEmpty() == true) {
-                            tracks.addAll(response.body()?.results!!)
-                            rvTrack.adapter?.notifyDataSetChanged()
-                            setStatus(SearchStatus.SUCCESS)
-                        }
-                        if (tracks.isEmpty()) {
-                            setStatus(SearchStatus.EMPTY_SEARCH)
+        if (queryInput.text.isNotEmpty()) {
+            setStatus(SearchStatus.PROGRESS)
+            itunesService.search(queryInput.text.toString())
+                .enqueue(object : Callback<TrackResponse> {
+                    @SuppressLint("NotifyDataSetChanged")
+                    override fun onResponse(
+                        call: Call<TrackResponse>,
+                        response: Response<TrackResponse>
+                    ) {
+                        Log.d("RESPONSE_CODE", "Status code: ${response.code()}")
+                        Log.d("RESPONSE_BODY", "Status code: ${response.body()?.results}")
+                        if (response.code() == SUCCESS) {
+                            tracks.clear()
+                            if (response.body()?.results?.isNotEmpty() == true) {
+                                tracks.addAll(response.body()?.results!!)
+                                rvTrack.adapter?.notifyDataSetChanged()
+                                setStatus(SearchStatus.SUCCESS)
+                            }
+                            if (tracks.isEmpty()) {
+                                setStatus(SearchStatus.EMPTY_SEARCH)
+                            }
                         }
                     }
-                }
 
-                override fun onFailure(call: Call<TrackResponse>, t: Throwable) {
-                    setStatus(SearchStatus.CONNECTION_ERROR)
-                }
+                    override fun onFailure(call: Call<TrackResponse>, t: Throwable) {
+                        setStatus(SearchStatus.CONNECTION_ERROR)
+                    }
 
-            })
+                })
+        }
+    }
+
+    private fun clickDebounce(): Boolean {
+        val current = isClickAllowed
+        if (isClickAllowed) {
+            isClickAllowed = false
+            handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY)
+        }
+        return current
+    }
+
+    private fun searchDebounce() {
+        handler.removeCallbacks(searchRunnable)
+        handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
     }
 
     private fun setStatus(status: SearchStatus) {
         when (status) {
+            SearchStatus.PROGRESS -> {
+                progressBar.visibility = View.VISIBLE
+                searchHistoryFragment.visibility = View.GONE
+                networkIssue.visibility = View.GONE
+                nothingFound.visibility = View.GONE
+                rvTrack.visibility = View.GONE
+            }
+
             SearchStatus.CONNECTION_ERROR -> {
                 networkIssue.visibility = View.VISIBLE
                 searchHistoryFragment.visibility = View.GONE
                 rvTrack.visibility = View.GONE
                 nothingFound.visibility = View.GONE
+                progressBar.visibility = View.GONE
             }
 
             SearchStatus.EMPTY_SEARCH -> {
@@ -202,6 +242,7 @@ class SearchActivity : AppCompatActivity() {
                 searchHistoryFragment.visibility = View.GONE
                 networkIssue.visibility = View.GONE
                 rvTrack.visibility = View.GONE
+                progressBar.visibility = View.GONE
             }
 
             SearchStatus.SUCCESS -> {
@@ -209,6 +250,7 @@ class SearchActivity : AppCompatActivity() {
                 searchHistoryFragment.visibility = View.GONE
                 networkIssue.visibility = View.GONE
                 nothingFound.visibility = View.GONE
+                progressBar.visibility = View.GONE
             }
 
             SearchStatus.HISTORY -> {
@@ -216,6 +258,7 @@ class SearchActivity : AppCompatActivity() {
                 networkIssue.visibility = View.GONE
                 nothingFound.visibility = View.GONE
                 rvTrack.visibility = View.GONE
+                progressBar.visibility = View.GONE
             }
 
             SearchStatus.ALL_GONE -> {
@@ -223,6 +266,7 @@ class SearchActivity : AppCompatActivity() {
                 networkIssue.visibility = View.GONE
                 nothingFound.visibility = View.GONE
                 rvTrack.visibility = View.GONE
+                progressBar.visibility = View.GONE
             }
         }
     }
@@ -269,9 +313,12 @@ class SearchActivity : AppCompatActivity() {
     companion object {
         const val SEARCH_INPUT_KEY = "SEARCH_INPUT"
         const val SUCCESS = 200
+        const val CLICK_DEBOUNCE_DELAY = 1000L
+        const val SEARCH_DEBOUNCE_DELAY = 2000L
     }
 
     enum class SearchStatus {
+        PROGRESS,
         CONNECTION_ERROR,
         EMPTY_SEARCH,
         SUCCESS,
