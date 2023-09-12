@@ -59,8 +59,6 @@ class PlayerActivity : AppCompatActivity() {
         btPlay.setOnClickListener {
             playbackControl()
         }
-
-
     }
 
     private fun getData() {
