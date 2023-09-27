@@ -9,7 +9,7 @@
     android:paddingStart="@dimen/padding_all_around"
     android:paddingEnd="@dimen/padding_all_around"
     android:weightSum="3"
-    tools:context=".MainActivity">
+    tools:context=".main.MainActivity">
 
     <com.google.android.material.textview.MaterialTextView
         style="@style/TextHead"
