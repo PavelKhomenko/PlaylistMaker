@@ -2,23 +2,20 @@ package com.example.playlistmaker.application
 
 import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
-
-const val THEME_PREFERENCES = "dark_theme"
-const val SWITCHER_KEY = "key_switcher"
+import com.example.playlistmaker.creator.Creator
 
 class App : Application() {
 
-    var darkTheme = false
+    private var darkTheme = false
 
     override fun onCreate() {
         super.onCreate()
-        darkTheme = getSavedTheme()
+        val settingsInteractor = Creator.provideSettingsInteractor(this)
+        darkTheme = settingsInteractor.getThemeSettings().darkTheme
         switchTheme(darkTheme)
     }
 
-    fun switchTheme(darkThemeEnabled: Boolean) {
-        darkTheme = darkThemeEnabled
-        saveTheme(darkTheme)
+    private fun switchTheme(darkThemeEnabled: Boolean) {
         AppCompatDelegate.setDefaultNightMode(
             if (darkThemeEnabled) {
                 AppCompatDelegate.MODE_NIGHT_YES
@@ -28,15 +25,7 @@ class App : Application() {
         )
     }
 
-    private fun saveTheme(darkThemeEnabled: Boolean) {
-        val sharedPreferences = getSharedPreferences(THEME_PREFERENCES, MODE_PRIVATE)
-        val editor = sharedPreferences.edit()
-        editor.putBoolean(SWITCHER_KEY, darkThemeEnabled)
-        editor.apply()
-    }
-
-    private fun getSavedTheme(): Boolean {
-        val sharedPreferences = getSharedPreferences(THEME_PREFERENCES, MODE_PRIVATE)
-        return sharedPreferences.getBoolean(SWITCHER_KEY, false)
+    companion object {
+        const val THEME_PREFERENCES = "theme_preferences"
     }
 }

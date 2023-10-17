@@ -1,14 +1,15 @@
 package com.example.playlistmaker.player.data
 
 import android.media.MediaPlayer
+import com.example.playlistmaker.player.domain.api.PlayerRepository
 import com.example.playlistmaker.player.domain.model.PlayerState
 
-class PlayerRepositoryImpl(private val trackUrl: String) : PlayerRepository {
+class PlayerRepositoryImpl : PlayerRepository {
     override var playerState = PlayerState.STATE_DEFAULT
 
     private val mediaPlayer: MediaPlayer = MediaPlayer()
 
-    override fun preparePlayer() {
+    override fun preparePlayer(trackUrl: String) {
         mediaPlayer.apply {
             setDataSource(trackUrl)
             prepareAsync()

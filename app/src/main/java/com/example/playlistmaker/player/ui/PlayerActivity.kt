@@ -4,20 +4,20 @@ import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
-import com.example.playlistmaker.player.Creator
 import com.example.playlistmaker.player.domain.model.Track
-import com.example.playlistmaker.player.presentation.PlayerPresenterImpl
-import com.example.playlistmaker.player.presentation.PlayerView
+import com.example.playlistmaker.player.presentation.PlayerStatus
+import com.example.playlistmaker.player.presentation.PlayerViewModel
+import com.example.playlistmaker.search.ui.SearchActivity.Companion.SEARCH_INPUT_KEY
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-class PlayerActivity : AppCompatActivity(), PlayerView {
+class PlayerActivity : AppCompatActivity() {
 
-    private lateinit var presenter : PlayerPresenterImpl
     private val ivBackButton: ImageView by lazy { findViewById(R.id.back_arrow) }
     private val ivSongCover: ImageView by lazy { findViewById(R.id.cover) }
     private val tvSongName: TextView by lazy { findViewById(R.id.song_name) }
@@ -31,35 +31,46 @@ class PlayerActivity : AppCompatActivity(), PlayerView {
     private val btPlay: ImageView by lazy { findViewById(R.id.play_button) }
     private val tvSecondsPassed: TextView by lazy { findViewById(R.id.time_played) }
 
+    private val viewModel by viewModels<PlayerViewModel> {
+        PlayerViewModel.getViewModelFactory()
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_player)
         tvSongAlbum.visibility = View.VISIBLE
         tvAlbumTitle.visibility = View.VISIBLE
 
-        presenter = Creator.connectPresenter(playerView = this, activity = this)
+        val track = intent.getSerializableExtra(SEARCH_INPUT_KEY) as Track
+        getData(track)
+
+        viewModel.preparePlayer(track.previewUrl)
+        viewModel.getPlayerStatusLiveData().observe(this) {
+            when (it) {
+                PlayerStatus.OnPause -> setPlayImage()
+                PlayerStatus.OnStart -> setPauseImage()
+            }
+        }
+        viewModel.getDurationLiveData().observe(this) {
+            updateTimePlayed(it)
+        }
 
         setupListeners()
     }
 
-    private fun setupListeners(){
-        ivBackButton.setOnClickListener { presenter.onIvBackPressed() }
+    private fun setupListeners() {
+        ivBackButton.setOnClickListener { finish() }
         btPlay.setOnClickListener {
-            presenter.onBtnPlayClicked()
+            viewModel.onBtnPlayClicked()
         }
     }
 
     override fun onPause() {
         super.onPause()
-        presenter.onViewPaused()
+        viewModel.onViewPaused()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        presenter.onViewDestroyed()
-    }
-
-    override fun getData(track: Track) {
+    private fun getData(track: Track) {
         Glide.with(this).load(track.artworkUrl100.replaceAfterLast(DELIMITER, PROPER_DIMENSIONS))
             .placeholder(R.drawable.placeholder).centerInside()
             .transform(RoundedCorners(this.resources.getDimensionPixelSize(R.dimen.margin_8dp)))
@@ -78,26 +89,23 @@ class PlayerActivity : AppCompatActivity(), PlayerView {
         tvSongYear.text = track.releaseDate.subSequence(ZERO, FOUR)
         tvSongGenre.text = track.primaryGenreName
         tvSongCountry.text = track.country
-        tvSecondsPassed.text = "00:00"
+        tvSecondsPassed.text = TIMER_BEGIN_TIME
     }
 
-    override fun goBack() {
-        finish()
-    }
-
-    override fun setPauseImage() {
+    private fun setPauseImage() {
         btPlay.setImageResource(R.drawable.pause)
     }
 
-    override fun setStartImage() {
+    private fun setPlayImage() {
         btPlay.setImageResource(R.drawable.play)
     }
 
-    override fun updateTimePlayed(timePlayed: String) {
+    private fun updateTimePlayed(timePlayed: String) {
         tvSecondsPassed.text = timePlayed
     }
 
     companion object {
+        private const val TIMER_BEGIN_TIME = "00:00"
         private const val FOUR = 4
         private const val ZERO = 0
         private const val DELIMITER = '/'
