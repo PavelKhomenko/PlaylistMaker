@@ -35,7 +35,7 @@ class SearchViewModel(private val tracksInteractor: TracksInteractor) : ViewMode
             return
         }
 
-        this.searchText = queryInput
+        searchText = queryInput
         handler.removeCallbacksAndMessages(SEARCH_TOKEN)
         val searchRunnable = Runnable { searchRequest(queryInput) }
 

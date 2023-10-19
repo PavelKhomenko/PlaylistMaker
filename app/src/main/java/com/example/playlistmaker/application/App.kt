@@ -24,8 +24,4 @@ class App : Application() {
             }
         )
     }
-
-    companion object {
-        const val THEME_PREFERENCES = "theme_preferences"
-    }
 }

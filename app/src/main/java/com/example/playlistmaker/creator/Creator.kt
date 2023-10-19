@@ -3,7 +3,6 @@ package com.example.playlistmaker.creator
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
-import com.example.playlistmaker.application.App
 import com.example.playlistmaker.player.data.PlayerRepositoryImpl
 import com.example.playlistmaker.player.domain.api.PlayerInteractor
 import com.example.playlistmaker.player.domain.impl.PlayerInteractorImpl
@@ -24,6 +23,7 @@ import com.example.playlistmaker.sharing.domain.api.ExternalNavigator
 import com.example.playlistmaker.sharing.domain.api.SharingInteractor
 import com.example.playlistmaker.sharing.domain.impl.SharingInteractorImpl
 
+private const val THEME_PREFERENCES = "theme_preferences"
 object Creator {
     fun providePlayerInteractor(): PlayerInteractor = PlayerInteractorImpl(PlayerRepositoryImpl())
 
@@ -59,7 +59,6 @@ object Creator {
 
     private fun getSettingsPreferences(context: Context): SharedPreferences =
         context.getSharedPreferences(
-            App.THEME_PREFERENCES, AppCompatActivity.MODE_PRIVATE
+            THEME_PREFERENCES, AppCompatActivity.MODE_PRIVATE
         )
-
 }
