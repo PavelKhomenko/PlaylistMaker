@@ -107,7 +107,4 @@
         <item name="android:layout_marginBottom">@dimen/margin_8dp</item>
     </style>
 
-    <style name="rounded_corner">
-        <item name="cornerSize">8dp</item>
-    </style>
 </resources>
