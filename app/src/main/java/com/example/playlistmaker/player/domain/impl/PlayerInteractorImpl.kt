@@ -8,7 +8,7 @@ import java.util.Locale
 
 class PlayerInteractorImpl(private val playerRepository: PlayerRepository) : PlayerInteractor {
 
-    override fun getPlayerState(): PlayerState = playerRepository.playerState
+    override fun getPlayerState(): PlayerState = playerRepository.getPlayerState()
 
     override fun prepare(trackUrl: String) = playerRepository.preparePlayer(trackUrl)
 

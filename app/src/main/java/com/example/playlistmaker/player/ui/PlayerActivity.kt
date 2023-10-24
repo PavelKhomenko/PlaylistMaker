@@ -13,7 +13,6 @@ import com.example.playlistmaker.player.domain.model.Track
 import com.example.playlistmaker.player.presentation.PlayerStatus
 import com.example.playlistmaker.player.presentation.PlayerViewModel
 import com.example.playlistmaker.search.ui.SearchActivity.Companion.SEARCH_INPUT_KEY
-import com.example.playlistmaker.utils.ToolsRouter
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -31,7 +30,6 @@ class PlayerActivity : AppCompatActivity() {
     private val tvSongCountry: TextView by lazy { findViewById(R.id.country) }
     private val btPlay: ImageView by lazy { findViewById(R.id.play_button) }
     private val tvSecondsPassed: TextView by lazy { findViewById(R.id.time_played) }
-    private val router = ToolsRouter()
 
     private val viewModel by viewModels<PlayerViewModel> {
         PlayerViewModel.getViewModelFactory()
@@ -74,13 +72,10 @@ class PlayerActivity : AppCompatActivity() {
 
     private fun getData(track: Track) {
 
-        router.glideProvider(
-            context = this,
-            url = track.previewUrl,
-            cornerRadius = this.resources.getDimensionPixelSize(R.dimen.margin_8dp),
-            placeholder = R.drawable.placeholder,
-            view = ivSongCover
-        )
+        Glide.with(this).load(track.artworkUrl100.replaceAfterLast(DELIMITER, REPLACEMENTS))
+            .placeholder(R.drawable.placeholder).centerInside()
+            .transform(RoundedCorners(this.resources.getDimensionPixelSize(R.dimen.margin_8dp)))
+            .into(ivSongCover)
 
         tvSongDuration.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(track.trackTime)
         tvSongAlbum.text = track.collectionName.ifEmpty {
@@ -114,5 +109,7 @@ class PlayerActivity : AppCompatActivity() {
         private const val TIMER_BEGIN_TIME = "00:00"
         private const val FOUR = 4
         private const val ZERO = 0
+        private const val DELIMITER = '/'
+        private const val REPLACEMENTS = "512x512bb.jpg"
     }
 }
