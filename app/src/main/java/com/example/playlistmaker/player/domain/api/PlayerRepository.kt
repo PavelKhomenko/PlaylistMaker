@@ -4,7 +4,7 @@ import com.example.playlistmaker.player.domain.model.PlayerState
 
 interface PlayerRepository {
 
-    var playerState: PlayerState
+    fun getPlayerState(): PlayerState
 
     fun preparePlayer(trackUrl: String)
 

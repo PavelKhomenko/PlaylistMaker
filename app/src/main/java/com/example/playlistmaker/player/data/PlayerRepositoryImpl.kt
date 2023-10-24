@@ -5,7 +5,7 @@ import com.example.playlistmaker.player.domain.api.PlayerRepository
 import com.example.playlistmaker.player.domain.model.PlayerState
 
 class PlayerRepositoryImpl : PlayerRepository {
-    override var playerState = PlayerState.STATE_DEFAULT
+    private var playerState = PlayerState.STATE_DEFAULT
 
     private val mediaPlayer: MediaPlayer = MediaPlayer()
 
@@ -31,7 +31,15 @@ class PlayerRepositoryImpl : PlayerRepository {
         playerState = PlayerState.STATE_PAUSED
     }
 
-    override fun stopPlayer() = mediaPlayer.release()
+    override fun stopPlayer() {
+        mediaPlayer.apply {
+            stop()
+            reset()
+            release()
+        }
+    }
+
+    override fun getPlayerState(): PlayerState = playerState
 
     override fun getCurrentPosition() = mediaPlayer.currentPosition
 
