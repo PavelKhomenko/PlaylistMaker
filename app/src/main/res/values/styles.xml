@@ -107,4 +107,9 @@
         <item name="android:layout_marginBottom">@dimen/margin_8dp</item>
     </style>
 
+    <style name="TabLayoutStylle">
+        <item name="fontFamily">@font/ys_display_regular</item>
+        <item name="android:textSize">@dimen/text_16sp</item>
+    </style>
+
 </resources>
