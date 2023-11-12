@@ -5,11 +5,12 @@ import com.example.playlistmaker.player.domain.api.PlayerRepository
 import com.example.playlistmaker.player.domain.model.PlayerState
 
 class PlayerRepositoryImpl : PlayerRepository {
-    private var playerState = PlayerState.STATE_DEFAULT
 
-    private val mediaPlayer: MediaPlayer = MediaPlayer()
+    private var playerState = PlayerState.STATE_DEFAULT
+    private var mediaPlayer = MediaPlayer()
 
     override fun preparePlayer(trackUrl: String) {
+        mediaPlayer = MediaPlayer()
         mediaPlayer.apply {
             setDataSource(trackUrl)
             prepareAsync()

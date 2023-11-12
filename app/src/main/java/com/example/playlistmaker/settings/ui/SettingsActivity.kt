@@ -4,10 +4,10 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
-import androidx.activity.viewModels
 import com.example.playlistmaker.R
 import com.example.playlistmaker.settings.presentation.SettingsViewModel
 import com.google.android.material.switchmaterial.SwitchMaterial
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SettingsActivity : AppCompatActivity() {
 
@@ -17,9 +17,7 @@ class SettingsActivity : AppCompatActivity() {
     private val supportMail: ImageView by lazy { findViewById(R.id.support) }
     private val userAgreement: ImageView by lazy { findViewById(R.id.user_agreement) }
 
-    private val viewModel by viewModels<SettingsViewModel> {
-        SettingsViewModel.getViewModelFactory()
-    }
+    private val viewModel by viewModel<SettingsViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

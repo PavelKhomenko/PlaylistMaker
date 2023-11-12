@@ -20,7 +20,7 @@
             android:name=".player.ui.PlayerActivity"
             android:exported="false" />
         <activity
-            android:name=".library.LibraryActivity"
+            android:name=".library.ui.LibraryActivity"
             android:exported="false" />
         <activity
             android:name=".search.ui.SearchActivity"

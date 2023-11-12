@@ -2,17 +2,14 @@ package com.example.playlistmaker.search.data.sharedPreferences
 
 import android.content.SharedPreferences
 import com.example.playlistmaker.player.domain.model.Track
+import com.example.playlistmaker.utils.Const.HISTORY_KEY
 import com.google.gson.Gson
 
-class SearchStorageImpl(private val sharedPreferences: SharedPreferences) : SearchStorage {
-
-    private companion object {
-        const val HISTORY_KEY = "search_history"
-    }
+class SearchStorageImpl(private val sharedPreferences: SharedPreferences, private val gson: Gson) : SearchStorage {
 
     override fun getTracks(): Array<Track> {
         val json = sharedPreferences.getString(HISTORY_KEY, null) ?: return emptyArray()
-        val tracks = Gson().fromJson(json, Array<Track>::class.java)
+        val tracks = gson.fromJson(json, Array<Track>::class.java)
         return tracks.reversedArray()
     }
 
@@ -26,7 +23,7 @@ class SearchStorageImpl(private val sharedPreferences: SharedPreferences) : Sear
         }
         tracks.add(track)
         sharedPreferences.edit()
-            .putString(HISTORY_KEY, Gson().toJson(tracks))
+            .putString(HISTORY_KEY, gson.toJson(tracks))
             .apply()
     }
 
@@ -38,6 +35,6 @@ class SearchStorageImpl(private val sharedPreferences: SharedPreferences) : Sear
 
     private fun read(): Array<Track> {
         val json = sharedPreferences.getString(HISTORY_KEY, null) ?: return emptyArray()
-        return Gson().fromJson(json, Array<Track>::class.java)
+        return gson.fromJson(json, Array<Track>::class.java)
     }
 }

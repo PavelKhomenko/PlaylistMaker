@@ -4,11 +4,7 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.playlistmaker.application.App
-import com.example.playlistmaker.creator.Creator
 import com.example.playlistmaker.settings.domain.api.SettingsInteractor
 import com.example.playlistmaker.settings.domain.model.ThemeSettings
 import com.example.playlistmaker.sharing.domain.api.SharingInteractor
@@ -46,19 +42,4 @@ class SettingsViewModel(
             if (darkThemeEnabled) AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO
         )
     }
-
-    companion object {
-        fun getViewModelFactory(): ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                val application = this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as App
-                SettingsViewModel(
-                    sharingInteractor = Creator.provideSharingInteractor(application),
-                    settingsInteractor = Creator.provideSettingsInteractor(application),
-                    application = application
-                )
-            }
-        }
-    }
-
-
 }
