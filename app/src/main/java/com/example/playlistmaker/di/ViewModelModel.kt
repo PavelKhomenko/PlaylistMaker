@@ -1,6 +1,8 @@
 package com.example.playlistmaker.di
 
 import com.example.playlistmaker.application.App
+import com.example.playlistmaker.library.presentation.FavoritesViewModel
+import com.example.playlistmaker.library.presentation.PlaylistViewModel
 import com.example.playlistmaker.player.presentation.PlayerViewModel
 import com.example.playlistmaker.search.presentation.SearchViewModel
 import com.example.playlistmaker.settings.presentation.SettingsViewModel
@@ -18,4 +20,6 @@ val viewModelModule = module {
             sharingInteractor = get()
         )
     }
+    viewModel { FavoritesViewModel() }
+    viewModel { PlaylistViewModel() }
 }
