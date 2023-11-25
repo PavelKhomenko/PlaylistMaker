@@ -1,5 +1,6 @@
-package com.example.playlistmaker.library.ui
 
+package com.example.playlistmaker.library.ui
+/*
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -17,7 +18,7 @@ class LibraryActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_library)
+        setContentView(R.layout.fragment_library)
         libraryViewPager.adapter = LibraryPagerAdapter(supportFragmentManager, lifecycle)
         tabMediator = TabLayoutMediator(libraryTabLayout, libraryViewPager) { tab, position ->
             when (position) {
@@ -28,4 +29,4 @@ class LibraryActivity : AppCompatActivity() {
         tabMediator.attach()
         vgBack.setOnClickListener { finish() }
     }
-}
+}*/

@@ -11,7 +11,7 @@ import com.example.playlistmaker.R
 import com.example.playlistmaker.player.domain.model.Track
 import com.example.playlistmaker.player.presentation.PlayerStatus
 import com.example.playlistmaker.player.presentation.PlayerViewModel
-import com.example.playlistmaker.search.ui.SearchActivity.Companion.SEARCH_INPUT_KEY
+import com.example.playlistmaker.search.ui.SearchFragment.Companion.SEARCH_INPUT_KEY
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.text.SimpleDateFormat
 import java.util.Locale

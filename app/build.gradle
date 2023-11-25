@@ -31,9 +31,15 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+    buildFeatures {
+        viewBinding  = true
+    }
 }
 
 dependencies {
+    implementation ("androidx.navigation:navigation-fragment-ktx:2.5.3")
+    implementation ("androidx.navigation:navigation-ui-ktx:2.5.3")
+    implementation ("androidx.fragment:fragment-ktx:1.5.6")
     implementation( "androidx.viewpager2:viewpager2:1.0.0") // viewpager
     implementation ("androidx.fragment:fragment-ktx:1.5.5") //fragments
     implementation "io.insert-koin:koin-android:3.3.0"
