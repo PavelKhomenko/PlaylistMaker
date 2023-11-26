@@ -48,14 +48,15 @@ class SearchFragment : Fragment() {
     private val handler = Handler(Looper.getMainLooper())
 
     private val viewModel by viewModel<SearchViewModel>()
-    private lateinit var binding: FragmentSearchBinding
+    private var _binding: FragmentSearchBinding? = null
+    private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentSearchBinding.inflate(inflater, container, false)
+        _binding = FragmentSearchBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -75,13 +76,23 @@ class SearchFragment : Fragment() {
         historyTracksAdapter.notifyDataSetChanged()
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
     private fun render(it: SearchState) {
         when (it) {
             is SearchState.Loading -> showLoading()
             is SearchState.Content -> showContent(it.tracks)
             is SearchState.Empty -> showEmpty()
             is SearchState.Error -> showError()
+            is SearchState.HistoryContent -> showHistory(it.historyList)
         }
+    }
+
+    private fun showHistory(historyList: List<Track>) {
+        setStatus(SearchStatus.HISTORY)
     }
 
     private fun showLoading() {
@@ -150,6 +161,7 @@ class SearchFragment : Fragment() {
         refresh.setOnClickListener { viewModel.searchDebounce(queryInput.text.toString()) }
 
         ivClearInputText.setOnClickListener {
+            viewModel.clearSearchText()
             queryInput.text = null
             val inputMethodManager =
                 requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
