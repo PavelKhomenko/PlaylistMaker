@@ -11,18 +11,10 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <ImageView
-            android:id="@+id/back_arrow"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/dp_20"
-            android:src="@drawable/back_arrow" />
-
-
         <com.google.android.material.textview.MaterialTextView
             style="@style/TextHead"
-            android:layout_marginStart="28dp"
-            android:layout_marginTop="14dp"
+            android:layout_marginStart="@dimen/margin_12dp"
+            android:layout_marginTop="@dimen/margin_14dp"
             android:text="@string/media"
             android:textColor="?attr/colorOnSecondary" />
 

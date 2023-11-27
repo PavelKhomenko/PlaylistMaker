@@ -2,11 +2,12 @@ package com.example.playlistmaker.search.ui
 
 import android.content.Context
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
@@ -15,8 +16,9 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import androidx.core.widget.doOnTextChanged
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
-import com.example.playlistmaker.R
+import com.example.playlistmaker.databinding.FragmentSearchBinding
 import com.example.playlistmaker.player.domain.model.Track
 import com.example.playlistmaker.player.ui.PlayerActivity
 import com.example.playlistmaker.search.presentation.SearchState
@@ -24,22 +26,20 @@ import com.example.playlistmaker.search.presentation.SearchStatus
 import com.example.playlistmaker.search.presentation.SearchViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
+class SearchFragment : Fragment() {
 
-class SearchActivity : AppCompatActivity() {
+    private lateinit var queryInput: EditText
+    private lateinit var ivClearInputText: ImageView
+    private lateinit var clearHistoryButton: Button
+    private lateinit var refresh: Button
+    private lateinit var progressBar: ProgressBar
 
-    private val queryInput: EditText by lazy { findViewById(R.id.search_input) }
-    private val back: View by lazy { findViewById(R.id.back) }
-    private val ivClearInputText: ImageView by lazy { findViewById(R.id.clear_text) }
-    private val clearHistoryButton: Button by lazy { findViewById(R.id.delete_history_button) }
-    private val refresh: Button by lazy { findViewById(R.id.refreshButton) }
-    private val progressBar: ProgressBar by lazy { findViewById(R.id.progressBar) }
+    private lateinit var rvTrack: RecyclerView
+    private lateinit var rvHistoryTrack: RecyclerView
 
-    private val rvTrack: RecyclerView by lazy { findViewById(R.id.recyclerSearch) }
-    private val rvHistoryTrack: RecyclerView by lazy { findViewById(R.id.recycler_history) }
-
-    private val nothingFound: LinearLayout by lazy { findViewById(R.id.error_nothing_found) }
-    private val networkIssue: LinearLayout by lazy { findViewById(R.id.error_no_connection) }
-    private val searchHistoryFragment: LinearLayout by lazy { findViewById(R.id.search_history_fragment) }
+    private lateinit var nothingFound: LinearLayout
+    private lateinit var networkIssue: LinearLayout
+    private lateinit var searchHistoryFragment: LinearLayout
 
     private lateinit var trackAdapter: TrackAdapter
     private lateinit var historyTracksAdapter: TrackAdapter
@@ -48,15 +48,25 @@ class SearchActivity : AppCompatActivity() {
     private val handler = Handler(Looper.getMainLooper())
 
     private val viewModel by viewModel<SearchViewModel>()
+    private var _binding: FragmentSearchBinding? = null
+    private val binding get() = _binding!!
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_search)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        _binding = FragmentSearchBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        initView()
         setupAdapters()
         setupListeners()
 
-        viewModel.observeState().observe(this) {
+        viewModel.observeState().observe(viewLifecycleOwner) {
             render(it)
         }
     }
@@ -66,13 +76,23 @@ class SearchActivity : AppCompatActivity() {
         historyTracksAdapter.notifyDataSetChanged()
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
     private fun render(it: SearchState) {
         when (it) {
             is SearchState.Loading -> showLoading()
             is SearchState.Content -> showContent(it.tracks)
             is SearchState.Empty -> showEmpty()
             is SearchState.Error -> showError()
+            is SearchState.HistoryContent -> showHistory(it.historyList)
         }
+    }
+
+    private fun showHistory(historyList: List<Track>) {
+        setStatus(SearchStatus.HISTORY)
     }
 
     private fun showLoading() {
@@ -98,6 +118,19 @@ class SearchActivity : AppCompatActivity() {
         trackAdapter.notifyDataSetChanged()
     }
 
+    private fun initView() {
+        queryInput = binding.searchInput
+        ivClearInputText = binding.clearText
+        clearHistoryButton = binding.deleteHistoryButton
+        refresh = binding.refreshButton
+        progressBar = binding.progressBar
+        rvTrack = binding.recyclerSearch
+        rvHistoryTrack = binding.recyclerHistory
+        nothingFound = binding.errorNothingFound
+        networkIssue = binding.errorNoConnection
+        searchHistoryFragment = binding.searchHistoryFragment
+    }
+
     private fun setupAdapters() {
         val onClickListener = TrackClickListener { track ->
             if (clickDebounce()) {
@@ -119,19 +152,19 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun transferDataToPlayerActivity(track: Track) {
-        val intent = Intent(this, PlayerActivity::class.java)
+        val intent = Intent(requireContext(), PlayerActivity::class.java)
         intent.putExtra(SEARCH_INPUT_KEY, track)
         startActivity(intent)
     }
 
     private fun setupListeners() {
-        back.setOnClickListener { finish() }
         refresh.setOnClickListener { viewModel.searchDebounce(queryInput.text.toString()) }
 
         ivClearInputText.setOnClickListener {
+            viewModel.clearSearchText()
             queryInput.text = null
             val inputMethodManager =
-                getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+                requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
             inputMethodManager?.hideSoftInputFromWindow(queryInput.windowToken, 0)
             rvTrack.visibility = View.GONE
             if (viewModel.getTracksFromSearchHistory().isEmpty()) {
@@ -244,18 +277,6 @@ class SearchActivity : AppCompatActivity() {
                 progressBar.visibility = View.GONE
             }
         }
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        val searchText = queryInput.text.toString()
-        outState.putString(SEARCH_INPUT_KEY, searchText)
-    }
-
-    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
-        super.onRestoreInstanceState(savedInstanceState)
-        val savedText = savedInstanceState.getString(SEARCH_INPUT_KEY)
-        queryInput.setText(savedText)
     }
 
     companion object {

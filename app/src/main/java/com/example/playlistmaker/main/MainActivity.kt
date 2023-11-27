@@ -1,37 +1,39 @@
 package com.example.playlistmaker.main
 
 
-import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Button
+import android.view.View
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.setupWithNavController
 import com.example.playlistmaker.R
-import com.example.playlistmaker.settings.ui.SettingsActivity
-import com.example.playlistmaker.library.ui.LibraryActivity
-import com.example.playlistmaker.search.ui.SearchActivity
-
+import com.example.playlistmaker.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
+
+    private lateinit var binding: ActivityMainBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
 
-        val search = findViewById<Button>(R.id.search)
-        search.setOnClickListener {
-            val displaySearchIntent = Intent(this, SearchActivity::class.java)
-            startActivity(displaySearchIntent)
-        }
+        // Привязываем вёрстку к экрану
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        val library = findViewById<Button>(R.id.library)
-        library.setOnClickListener {
-            val displayLibraryIntent = Intent(this, LibraryActivity::class.java)
-            startActivity(displayLibraryIntent)
-        }
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.mainFragmentContainerView) as NavHostFragment
+        val navController = navHostFragment.navController
 
-        val settings = findViewById<Button>(R.id.settings)
-        settings.setOnClickListener {
-            val displaySettingsIntent = Intent(this, SettingsActivity::class.java)
-            startActivity(displaySettingsIntent)
+        binding.bottomNavigationView.setupWithNavController(navController)
+
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            when (destination.id) {
+                R.id.searchFragment, R.id.libraryFragment, R.id.settingsFragment -> {
+                    binding.bottomNavigationView.visibility = View.VISIBLE
+                }
+                else -> {
+                    binding.bottomNavigationView.visibility = View.GONE
+                }
+            }
         }
 
     }

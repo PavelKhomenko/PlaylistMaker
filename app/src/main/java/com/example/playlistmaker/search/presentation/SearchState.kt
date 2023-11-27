@@ -10,6 +10,10 @@ sealed interface SearchState {
         val tracks: List<Track>
     ) : SearchState
 
+    data class HistoryContent(
+        val historyList: List<Track>,
+    ) : SearchState
+
     data class Error(
         @StringRes
         val errorMessageResId: Int

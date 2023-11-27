@@ -111,6 +111,11 @@ class SearchViewModel(private val tracksInteractor: TracksInteractor) : ViewMode
         tracksInteractor.clearSearchHistory()
     }
 
+
+    fun clearSearchText() {
+        stateLiveData.postValue(SearchState.HistoryContent(tracksInteractor.getTracksFromSearchHistory()))
+    }
+
     override fun onCleared() {
         handler.removeCallbacksAndMessages(SEARCH_TOKEN)
     }

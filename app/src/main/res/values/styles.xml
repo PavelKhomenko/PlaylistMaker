@@ -112,4 +112,11 @@
         <item name="android:textSize">@dimen/text_16sp</item>
     </style>
 
+    <style name="bottomNavigationViewStyle">
+        <item name="android:background">?attr/colorSecondary</item>
+        <item name="rippleColor">?attr/colorSecondary</item>
+        <item name="itemIconTint">@color/bottom_nav_color_selector</item>
+        <item name="itemTextColor">@color/bottom_nav_color_selector</item>
+    </style>
+
 </resources>
