@@ -69,7 +69,7 @@ class SearchFragment : Fragment() {
         viewModel.observeState().observe(viewLifecycleOwner) {
             render(it)
         }
- }
+    }
 
     override fun onStart() {
         super.onStart()
