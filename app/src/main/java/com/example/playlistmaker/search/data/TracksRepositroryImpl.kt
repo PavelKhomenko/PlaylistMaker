@@ -7,20 +7,21 @@ import com.example.playlistmaker.search.data.network.NetworkClient
 import com.example.playlistmaker.search.data.sharedPreferences.SearchStorage
 import com.example.playlistmaker.utils.Resource
 import com.example.playlistmaker.search.domain.api.TracksRepository
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 
 class TracksRepositoryImpl(
     private val networkClient: NetworkClient,
     private val searchStorage: SearchStorage,
 ) : TracksRepository {
-    override fun searchTracks(expression: String): Resource<List<Track>> {
+    override fun searchTracks(expression: String): Flow<Resource<List<Track>>> =  flow {
         val response = networkClient.doRequest(TracksSearchRequest(expression))
-        return when (response.resultCode) {
-            -1 -> Resource.InternetError()
+        when (response.resultCode) {
+            -1 -> emit(Resource.InternetError())
             200 -> {
-                Resource.Success((response as TrackSearchResponse).results)
+                emit(Resource.Success((response as TrackSearchResponse).results))
             }
-
-            else -> Resource.ServerError()
+            else -> emit(Resource.ServerError())
         }
     }
 
