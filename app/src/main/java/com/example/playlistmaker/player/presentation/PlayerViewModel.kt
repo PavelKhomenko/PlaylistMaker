@@ -14,8 +14,8 @@ class PlayerViewModel(val playerInteractor: PlayerInteractor) : ViewModel() {
 
     private var timerJob : Job? = null
 
-    private val playerStatusLiveData = MutableLiveData<PlayerStatus>()
-    fun getPlayerStatusLiveData(): LiveData<PlayerStatus> = playerStatusLiveData
+    private val _playerStatusLiveData = MutableLiveData<PlayerStatus>()
+    fun playerStatusLiveData(): LiveData<PlayerStatus> = _playerStatusLiveData
 
     private val durationLiveData = MutableLiveData<String>()
     fun getDurationLiveData(): LiveData<String> = durationLiveData
@@ -27,14 +27,14 @@ class PlayerViewModel(val playerInteractor: PlayerInteractor) : ViewModel() {
 
     fun onViewPaused() {
         playerInteractor.pause()
-        playerStatusLiveData.postValue(PlayerStatus.OnPause)
+        _playerStatusLiveData.postValue(PlayerStatus.OnPause)
     }
 
     fun preparePlayer(trackUrl: String) = playerInteractor.prepare(trackUrl)
 
     private fun startPlayer() {
         playerInteractor.start()
-        playerStatusLiveData.postValue(PlayerStatus.OnStart)
+        _playerStatusLiveData.postValue(PlayerStatus.OnStart)
 
         timerJob = viewModelScope.launch {
 
@@ -43,13 +43,13 @@ class PlayerViewModel(val playerInteractor: PlayerInteractor) : ViewModel() {
 
             while (state == PlayerState.STATE_PLAYING) {
                 durationLiveData.value = playerInteractor.getCurrentPosition()
-                delay(DELAY)
+                delay(DELAY_MILLIS)
                 state = playerInteractor.getPlayerState()
             }
 
             if (state == PlayerState.STATE_PREPARED) {
                 durationLiveData.value = "00:00"
-                playerStatusLiveData.postValue(PlayerStatus.OnPause)
+                _playerStatusLiveData.postValue(PlayerStatus.OnPause)
             }
         }
     }
@@ -63,6 +63,6 @@ class PlayerViewModel(val playerInteractor: PlayerInteractor) : ViewModel() {
     }
 
     companion object {
-        private const val DELAY = 1000L
+        private const val DELAY_MILLIS = 300L
     }
 }

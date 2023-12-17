@@ -43,7 +43,7 @@ class PlayerActivity : AppCompatActivity() {
         getData(track)
 
         viewModel.preparePlayer(track.previewUrl)
-        viewModel.getPlayerStatusLiveData().observe(this) {
+        viewModel.playerStatusLiveData().observe(this) {
             when (it) {
                 PlayerStatus.OnPause -> setPlayImage()
                 PlayerStatus.OnStart -> setPauseImage()
