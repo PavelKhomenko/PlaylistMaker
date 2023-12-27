@@ -1,19 +1,21 @@
 package com.example.playlistmaker.player.presentation
 
-import android.os.Handler
-import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.player.domain.api.PlayerInteractor
 import com.example.playlistmaker.player.domain.model.PlayerState
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class PlayerViewModel(val playerInteractor: PlayerInteractor) : ViewModel() {
 
-    private val handler = Handler(Looper.getMainLooper())
+    private var timerJob : Job? = null
 
-    private val playerStatusLiveData = MutableLiveData<PlayerStatus>()
-    fun getPlayerStatusLiveData(): LiveData<PlayerStatus> = playerStatusLiveData
+    private val _playerStatusLiveData = MutableLiveData<PlayerStatus>()
+    fun playerStatusLiveData(): LiveData<PlayerStatus> = _playerStatusLiveData
 
     private val durationLiveData = MutableLiveData<String>()
     fun getDurationLiveData(): LiveData<String> = durationLiveData
@@ -21,34 +23,35 @@ class PlayerViewModel(val playerInteractor: PlayerInteractor) : ViewModel() {
     override fun onCleared() {
         super.onCleared()
         playerInteractor.release()
-        handler.removeCallbacksAndMessages(null)
     }
 
     fun onViewPaused() {
         playerInteractor.pause()
-        playerStatusLiveData.postValue(PlayerStatus.OnPause)
-        handler.removeCallbacksAndMessages(null)
+        _playerStatusLiveData.postValue(PlayerStatus.OnPause)
     }
 
     fun preparePlayer(trackUrl: String) = playerInteractor.prepare(trackUrl)
 
     private fun startPlayer() {
         playerInteractor.start()
-        playerStatusLiveData.postValue(PlayerStatus.OnStart)
-        handler.postDelayed(object : Runnable {
-            override fun run() {
+        _playerStatusLiveData.postValue(PlayerStatus.OnStart)
+
+        timerJob = viewModelScope.launch {
+
+            durationLiveData.value = playerInteractor.getCurrentPosition()
+            var state = playerInteractor.getPlayerState()
+
+            while (state == PlayerState.STATE_PLAYING) {
                 durationLiveData.value = playerInteractor.getCurrentPosition()
-
-                val state = playerInteractor.getPlayerState()
-                if (state == PlayerState.STATE_PREPARED) {
-                    durationLiveData.value = "00:00"
-                    playerStatusLiveData.postValue(PlayerStatus.OnPause)
-                    handler.removeCallbacksAndMessages(null)
-                }
-                handler.postDelayed(this, DELAY)
+                delay(DELAY_MILLIS)
+                state = playerInteractor.getPlayerState()
             }
-        }, DELAY)
 
+            if (state == PlayerState.STATE_PREPARED) {
+                durationLiveData.value = "00:00"
+                _playerStatusLiveData.postValue(PlayerStatus.OnPause)
+            }
+        }
     }
 
     fun onBtnPlayClicked() {
@@ -60,6 +63,6 @@ class PlayerViewModel(val playerInteractor: PlayerInteractor) : ViewModel() {
     }
 
     companion object {
-        private const val DELAY = 1000L
+        private const val DELAY_MILLIS = 300L
     }
 }
