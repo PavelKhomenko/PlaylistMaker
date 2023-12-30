@@ -47,7 +47,6 @@ class FavoritesFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        placeholder = view.findViewById(R.id.FavoritesEmpty)
         initViews()
         setupAdapters()
         viewModel.observeState().observe(viewLifecycleOwner) { state ->
