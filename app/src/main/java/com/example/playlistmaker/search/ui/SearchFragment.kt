@@ -13,6 +13,7 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ProgressBar
+import android.widget.TextView
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -41,6 +42,7 @@ class SearchFragment : Fragment() {
     private lateinit var nothingFound: LinearLayout
     private lateinit var networkIssue: LinearLayout
     private lateinit var searchHistoryFragment: LinearLayout
+    private lateinit var historyText:TextView
 
     private lateinit var trackAdapter: TrackAdapter
     private lateinit var historyTracksAdapter: TrackAdapter
@@ -92,7 +94,9 @@ class SearchFragment : Fragment() {
     }
 
     private fun showHistory(historyList: List<Track>) {
-        setStatus(SearchStatus.HISTORY)
+        if (viewModel.getTracksFromSearchHistory().isEmpty()) {
+            setStatus(SearchStatus.ALL_GONE)
+        } else setStatus(SearchStatus.HISTORY)
     }
 
     private fun showLoading() {
@@ -122,6 +126,7 @@ class SearchFragment : Fragment() {
         queryInput = binding.searchInput
         ivClearInputText = binding.clearText
         clearHistoryButton = binding.deleteHistoryButton
+        historyText = binding.historyText
         refresh = binding.refreshButton
         progressBar = binding.progressBar
         rvTrack = binding.recyclerSearch
@@ -265,6 +270,8 @@ class SearchFragment : Fragment() {
 
             SearchStatus.HISTORY -> {
                 searchHistoryFragment.visibility = View.VISIBLE
+                historyText.visibility = View.VISIBLE
+                clearHistoryButton.visibility = View.VISIBLE
                 networkIssue.visibility = View.GONE
                 nothingFound.visibility = View.GONE
                 rvTrack.visibility = View.GONE
@@ -273,6 +280,8 @@ class SearchFragment : Fragment() {
 
             SearchStatus.ALL_GONE -> {
                 searchHistoryFragment.visibility = View.GONE
+                historyText.visibility = View.GONE
+                clearHistoryButton.visibility = View.GONE
                 networkIssue.visibility = View.GONE
                 nothingFound.visibility = View.GONE
                 rvTrack.visibility = View.GONE

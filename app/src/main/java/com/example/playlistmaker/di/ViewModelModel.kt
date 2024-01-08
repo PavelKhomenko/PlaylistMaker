@@ -11,7 +11,7 @@ import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
 val viewModelModule = module {
-    viewModel { PlayerViewModel(playerInteractor = get()) }
+    viewModel { PlayerViewModel(playerInteractor = get(), favoritesInteractor = get()) }
     viewModel { SearchViewModel(tracksInteractor = get()) }
     viewModel {
         SettingsViewModel(
@@ -20,6 +20,6 @@ val viewModelModule = module {
             sharingInteractor = get()
         )
     }
-    viewModel { FavoritesViewModel() }
+    viewModel { FavoritesViewModel(favoritesInteractor = get()) }
     viewModel { PlaylistViewModel() }
 }

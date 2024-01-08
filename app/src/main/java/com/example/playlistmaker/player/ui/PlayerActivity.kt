@@ -29,6 +29,7 @@ class PlayerActivity : AppCompatActivity() {
     private val tvSongGenre: TextView by lazy { findViewById(R.id.genre) }
     private val tvSongCountry: TextView by lazy { findViewById(R.id.country) }
     private val btPlay: ImageView by lazy { findViewById(R.id.play_button) }
+    private val btLike: ImageView by lazy { findViewById(R.id.like_button) }
     private val tvSecondsPassed: TextView by lazy { findViewById(R.id.time_played) }
 
     private val viewModel by viewModel<PlayerViewModel>()
@@ -41,7 +42,7 @@ class PlayerActivity : AppCompatActivity() {
 
         val track = intent.getSerializableExtra(SEARCH_INPUT_KEY) as Track
         getData(track)
-
+        viewModel.isLiked(track)
         viewModel.preparePlayer(track.previewUrl)
         viewModel.playerStatusLiveData().observe(this) {
             when (it) {
@@ -52,14 +53,19 @@ class PlayerActivity : AppCompatActivity() {
         viewModel.getDurationLiveData().observe(this) {
             updateTimePlayed(it)
         }
-
-        setupListeners()
+        viewModel.getFavoritesLiveData().observe(this) {
+            if (it) setLikeImage() else setDislikeImage()
+        }
+        setupListeners(track)
     }
 
-    private fun setupListeners() {
+    private fun setupListeners(track: Track) {
         ivBackButton.setOnClickListener { finish() }
         btPlay.setOnClickListener {
             viewModel.onBtnPlayClicked()
+        }
+        btLike.setOnClickListener {
+            viewModel.onBtnFavoritesClicked(track)
         }
     }
 
@@ -97,6 +103,14 @@ class PlayerActivity : AppCompatActivity() {
 
     private fun setPlayImage() {
         btPlay.setImageResource(R.drawable.play)
+    }
+
+    private fun setLikeImage() {
+        btLike.setImageResource(R.drawable.like)
+    }
+
+    private fun setDislikeImage() {
+        btLike.setImageResource(R.drawable.dislike)
     }
 
     private fun updateTimePlayed(timePlayed: String) {
