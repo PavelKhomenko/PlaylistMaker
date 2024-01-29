@@ -5,22 +5,24 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.LinearLayout
-import android.widget.TextView
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentFavoritesBinding
-import com.example.playlistmaker.databinding.FragmentSearchBinding
 import com.example.playlistmaker.library.favorites.presentation.FavoritesState
 import com.example.playlistmaker.library.favorites.presentation.FavoritesViewModel
 import com.example.playlistmaker.player.domain.model.Track
-import com.example.playlistmaker.player.ui.PlayerActivity
+import com.example.playlistmaker.player.ui.PlayerFragment
 import com.example.playlistmaker.search.ui.SearchFragment
+import com.example.playlistmaker.search.ui.SearchFragment.Companion.CLICK_DEBOUNCE_DELAY
+import com.example.playlistmaker.search.ui.SearchFragment.Companion.SEARCH_INPUT_KEY
 import com.example.playlistmaker.search.ui.TrackAdapter
 import com.example.playlistmaker.search.ui.TrackClickListener
+import com.example.playlistmaker.utils.debounce
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -30,6 +32,7 @@ class FavoritesFragment : Fragment() {
     private lateinit var placeholder: LinearLayout
     private lateinit var rvLikedTrack: RecyclerView
     private lateinit var trackAdapter: TrackAdapter
+    private lateinit var onClickDebounce: (Track) -> Unit
 
     private var isClickAllowed = true
 
@@ -63,6 +66,14 @@ class FavoritesFragment : Fragment() {
                 }
             }
         }
+        onClickDebounce =
+            debounce(CLICK_DEBOUNCE_DELAY, viewLifecycleOwner.lifecycleScope, false, action = {
+                findNavController().navigate(
+                    R.id.action_libraryFragment_to_playerFragment, bundleOf(
+                        SEARCH_INPUT_KEY to it
+                    )
+                )
+            })
     }
 
     private fun initViews() {
@@ -71,12 +82,9 @@ class FavoritesFragment : Fragment() {
     }
 
     private fun setupAdapters() {
-        val onClickListener = TrackClickListener { track ->
-            if (clickDebounce()) {
-                transferDataToPlayerActivity(track)
-            }
+        trackAdapter = TrackAdapter {
+            onClickDebounce(it)
         }
-        trackAdapter = TrackAdapter(onClickListener)
         rvLikedTrack.adapter = trackAdapter
     }
 
@@ -86,25 +94,8 @@ class FavoritesFragment : Fragment() {
         trackAdapter.notifyDataSetChanged()
     }
 
-    private fun transferDataToPlayerActivity(track: Track) {
-        val intent = Intent(requireContext(), PlayerActivity::class.java)
-        intent.putExtra(SearchFragment.SEARCH_INPUT_KEY, track)
-        startActivity(intent)
-    }
-
-    private fun clickDebounce(): Boolean {
-        val current = isClickAllowed
-        if (isClickAllowed) {
-            isClickAllowed = false
-            viewLifecycleOwner.lifecycleScope.launch {
-                delay(SearchFragment.CLICK_DEBOUNCE_DELAY)
-                isClickAllowed = true
-            }
-        }
-        return current
-    }
-
     companion object {
+        const val CLICK_DEBOUNCE_DELAY = 1000L
         fun newInstance() = FavoritesFragment()
     }
 }

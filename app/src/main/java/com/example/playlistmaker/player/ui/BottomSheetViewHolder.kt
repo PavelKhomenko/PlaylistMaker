@@ -14,12 +14,12 @@ import com.example.playlistmaker.library.playlists.domain.model.Playlist
 class BottomSheetViewHolder(parentView: ViewGroup) :
     RecyclerView.ViewHolder(
         LayoutInflater.from(parentView.context)
-            .inflate(R.layout.playlist_view, parentView, false)
+            .inflate(R.layout.bottom_sheet_view, parentView, false)
     ) {
 
-    private val ivPlaylistCover: ImageView = itemView.findViewById(R.id.playlist_cover)
-    private val tvPlaylistName: TextView = itemView.findViewById(R.id.playlist_name)
-    private val tvPlaylistSize: TextView = itemView.findViewById(R.id.playlist_size)
+    private val ivPlaylistCover: ImageView = itemView.findViewById(R.id.playlistCover)
+    private val tvPlaylistName: TextView = itemView.findViewById(R.id.playlistName)
+    private val tvPlaylistSize: TextView = itemView.findViewById(R.id.playlistSize)
 
     fun bind(playlist: Playlist) {
         val uri = Uri.parse(playlist.playlistUri)
@@ -34,9 +34,8 @@ class BottomSheetViewHolder(parentView: ViewGroup) :
     }
 
     private fun convertSizeToString(playlistSize: Int): String {
-        val preLastDigit = playlistSize % 100 / 10
-        /*if (preLastDigit == 1)
-            return "$playlistSize трек"*/
+        val preLastDigit = playlistSize % 100
+        if (preLastDigit in 5..20) return "$playlistSize треков"
         return when (preLastDigit % 10) {
             1 -> "$playlistSize трек"
             in(2..4) -> "$playlistSize трека"

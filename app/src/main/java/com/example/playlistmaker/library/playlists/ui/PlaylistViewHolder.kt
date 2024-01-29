@@ -35,9 +35,8 @@ class PlaylistViewHolder(parentView: ViewGroup) :
     }
 
     private fun convertSizeToString(playlistSize: Int): String {
-        val preLastDigit = playlistSize % 100 / 10
-        /*if (preLastDigit == 1)
-            return "$playlistSize трек"*/
+        val preLastDigit = playlistSize % 100
+        if (preLastDigit in 5..20) return "$playlistSize треков"
         return when (preLastDigit % 10) {
             1 -> "$playlistSize трек"
             in(2..4) -> "$playlistSize трека"

@@ -10,11 +10,11 @@ import kotlinx.coroutines.launch
 
 class CreatePlaylistViewModel(private val playlistInteractor: PlaylistInteractor) : ViewModel() {
 
-    private val _state = MutableLiveData<Boolean>()
-    fun state(): LiveData<Boolean> = _state
+    private val buttonStatusLiveData = MutableLiveData<Boolean>()
+    fun getButtonLiveData(): LiveData<Boolean> = buttonStatusLiveData
 
     fun hasPlaylistName(status: Boolean) {
-        _state.value = status
+        buttonStatusLiveData.value = status
     }
 
     fun createPlaylist(playlist: Playlist) {

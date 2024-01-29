@@ -3,13 +3,17 @@ package com.example.playlistmaker.library.playlists.ui
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.os.Environment
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContentProviderCompat.requireContext
@@ -56,6 +60,19 @@ class CreatePlaylistFragment : Fragment() {
         photoPicker()
         setupTextWatcher()
         setupListeners()
+        viewModel.getButtonLiveData().observe(viewLifecycleOwner) {
+            binding.btCreateNew.isEnabled = it
+        }
+        val callback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                if (isNoData()) {
+                    dialog.show()
+                } else {
+                    findNavController().popBackStack()
+                }
+            }
+        }
+        activity?.onBackPressedDispatcher?.addCallback(viewLifecycleOwner, callback)
     }
 
     private fun setupListeners() {
@@ -66,12 +83,12 @@ class CreatePlaylistFragment : Fragment() {
                 findNavController().popBackStack()
             }
         }
-        binding.playlistCreateButton.setOnClickListener { button ->
+        binding.btCreateNew.setOnClickListener { button ->
             if (button.isEnabled) {
                 findNavController().popBackStack()
                 Toast.makeText(
                     requireContext(),
-                    "Плейлист ${binding.playlistNameEditText.text.toString()} создан",
+                    "Плейлист ${binding.playlistNameEditText.text} создан",
                     Toast.LENGTH_SHORT
                 ).show()
             }
@@ -90,21 +107,42 @@ class CreatePlaylistFragment : Fragment() {
 
     private fun setupTextWatcher() {
 
-        binding.playlistNameEditText.doOnTextChanged { text, _, _, _ ->
-            if (text.isNullOrEmpty()) {
-                binding.playlistNameTextInputLayout.setInputBoxColor(R.drawable.box_layout_unselected)
-            } else {
-                binding.playlistNameTextInputLayout.setInputBoxColor(R.drawable.box_layout_selected)
+        val textWatcherName = object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
             }
-        }
 
-        binding.playlistDescriptionEditText.doOnTextChanged { text, _, _, _ ->
-            if (text.isNullOrEmpty()) {
-                binding.playlistDescriptionTextInputLayout.setInputBoxColor(R.drawable.box_layout_unselected)
-            } else {
-                binding.playlistDescriptionTextInputLayout.setInputBoxColor(R.drawable.box_layout_selected)
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                if (count > 0) {
+                    binding.playlistNameTextInputLayout.setInputBoxColor(R.drawable.box_layout_selected)
+                    viewModel.hasPlaylistName(true)
+                } else {
+                    binding.playlistNameTextInputLayout.setInputBoxColor(R.drawable.box_layout_unselected)
+                    viewModel.hasPlaylistName(true)
+                }
+            }
+
+            override fun afterTextChanged(p0: Editable?) {
             }
         }
+        binding.playlistNameEditText.addTextChangedListener (textWatcherName)
+
+
+        val textWatcherDescription = object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+               if (count > 0) {
+                   binding.playlistDescriptionTextInputLayout.setInputBoxColor(R.drawable.box_layout_selected)
+               } else {
+                   binding.playlistDescriptionTextInputLayout.setInputBoxColor(R.drawable.box_layout_unselected)
+               }
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+            }
+        }
+        binding.playlistDescriptionEditText.addTextChangedListener(textWatcherDescription)
     }
 
     private fun TextInputLayout.setInputBoxColor(colorId: Int) {

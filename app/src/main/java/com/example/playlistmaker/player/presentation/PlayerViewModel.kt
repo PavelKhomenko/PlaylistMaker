@@ -122,7 +122,7 @@ class PlayerViewModel(
         if (playlistList.isEmpty()) {
             renderState(PlaylistState.Empty)
         } else {
-            renderState(PlaylistState.Empty)
+            renderState(PlaylistState.Content(playlistList))
         }
     }
 
