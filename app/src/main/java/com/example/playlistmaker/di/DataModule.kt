@@ -5,8 +5,6 @@ import androidx.room.Room
 import com.example.playlistmaker.library.favorites.data.converters.TrackDbConvertor
 import com.example.playlistmaker.library.favorites.data.db.AppDatabase
 import com.example.playlistmaker.library.playlists.data.converters.PlaylistDbConverter
-import com.example.playlistmaker.library.playlists.data.db.PlaylistDataBase
-import com.example.playlistmaker.library.playlists.data.db.TrackForPlaylistDataBase
 import com.example.playlistmaker.search.data.network.ItunesApi
 import com.example.playlistmaker.search.data.network.NetworkClient
 import com.example.playlistmaker.search.data.network.RetrofitNetworkClient
@@ -30,18 +28,6 @@ val dataModule = module {
 
     single {
         Room.databaseBuilder(androidContext(), AppDatabase::class.java, "database.db")
-            //.fallbackToDestructiveMigration()
-            .build()
-    }
-
-    single {
-        Room.databaseBuilder(androidContext(), PlaylistDataBase::class.java, "playlist_database.db")
-            //.fallbackToDestructiveMigration()
-            .build()
-    }
-
-    single {
-        Room.databaseBuilder(androidContext(), TrackForPlaylistDataBase::class.java, "tracks_database.db")
             //.fallbackToDestructiveMigration()
             .build()
     }
