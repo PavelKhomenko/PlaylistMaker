@@ -29,8 +29,6 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class FavoritesFragment : Fragment() {
 
-    private lateinit var placeholder: LinearLayout
-    private lateinit var rvLikedTrack: RecyclerView
     private lateinit var trackAdapter: TrackAdapter
     private lateinit var onClickDebounce: (Track) -> Unit
 
@@ -50,18 +48,17 @@ class FavoritesFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initViews()
         setupAdapters()
         viewModel.observeState().observe(viewLifecycleOwner) { state ->
             when (state) {
                 FavoritesState.Empty -> {
-                    placeholder.visibility = View.GONE
-                    rvLikedTrack.visibility = View.VISIBLE
+                    binding.FavoritesEmpty.visibility = View.GONE
+                    binding.recyclerLiked.visibility = View.VISIBLE
                 }
 
                 is FavoritesState.Content -> {
-                    placeholder.visibility = View.GONE
-                    rvLikedTrack.visibility = View.VISIBLE
+                    binding.FavoritesEmpty.visibility = View.GONE
+                    binding.recyclerLiked.visibility = View.VISIBLE
                     content(state.tracks)
                 }
             }
@@ -76,16 +73,11 @@ class FavoritesFragment : Fragment() {
             })
     }
 
-    private fun initViews() {
-        placeholder = binding.FavoritesEmpty
-        rvLikedTrack = binding.recyclerLiked
-    }
-
     private fun setupAdapters() {
         trackAdapter = TrackAdapter {
             onClickDebounce(it)
         }
-        rvLikedTrack.adapter = trackAdapter
+        binding.recyclerLiked.adapter = trackAdapter
     }
 
     private fun content(liked: List<Track>) {
@@ -95,7 +87,7 @@ class FavoritesFragment : Fragment() {
     }
 
     companion object {
-        const val CLICK_DEBOUNCE_DELAY = 1000L
+        const val CLICK_DEBOUNCE_DELAY_MILLIS = 1000L
         fun newInstance() = FavoritesFragment()
     }
 }

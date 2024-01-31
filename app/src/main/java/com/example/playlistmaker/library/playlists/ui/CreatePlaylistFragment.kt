@@ -126,7 +126,6 @@ class CreatePlaylistFragment : Fragment() {
         }
         binding.playlistNameEditText.addTextChangedListener (textWatcherName)
 
-
         val textWatcherDescription = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
             }

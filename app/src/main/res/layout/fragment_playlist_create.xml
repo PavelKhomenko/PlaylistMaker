@@ -46,7 +46,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_24dp"
         android:hint="Название*"
-        android:textColorHint="@color/yp_text_gray"
         app:layout_constraintEnd_toEndOf="@id/right_guideline"
         app:layout_constraintStart_toStartOf="@id/left_guideline"
         app:layout_constraintTop_toBottomOf="@+id/playlist_cover">
@@ -67,7 +66,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_24dp"
         android:hint="Описание"
-        android:textColorHint="@color/yp_text_gray"
         app:layout_constraintEnd_toEndOf="@id/right_guideline"
         app:layout_constraintStart_toStartOf="@id/left_guideline"
         app:layout_constraintTop_toBottomOf="@+id/playlistNameTextInputLayout">
@@ -90,6 +88,7 @@
         android:enabled="false"
         android:gravity="center"
         android:text="Создать"
+        android:textColor="@color/yp_white"
         android:textAllCaps="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@id/right_guideline"

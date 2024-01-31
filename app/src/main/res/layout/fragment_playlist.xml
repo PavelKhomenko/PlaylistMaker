@@ -44,9 +44,11 @@
         android:id="@+id/rvPlaylist"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/margin_16dp"
+        android:layout_margin="@dimen/margin_8dp"
         android:visibility="visible"
         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+        app:spanCount="2"
+        tools:itemCount="5"
         tools:listitem="@layout/playlist_view" />
 
 </LinearLayout>
