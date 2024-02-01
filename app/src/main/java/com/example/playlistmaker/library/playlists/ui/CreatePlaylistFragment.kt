@@ -1,36 +1,30 @@
 package com.example.playlistmaker.library.playlists.ui
 
+import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.net.toUri
-import androidx.core.widget.addTextChangedListener
-import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.playlistmaker.R
-import com.example.playlistmaker.databinding.FragmentPlaylistBinding
 import com.example.playlistmaker.databinding.FragmentPlaylistCreateBinding
 import com.example.playlistmaker.library.playlists.domain.model.Playlist
 import com.example.playlistmaker.library.playlists.presentation.CreatePlaylistViewModel
-import com.example.playlistmaker.search.presentation.SearchStatus
 import com.example.playlistmaker.utils.MediaNameGenerator
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputLayout
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.File
@@ -40,7 +34,7 @@ class CreatePlaylistFragment : Fragment() {
 
     private var addUri: Uri? = null
     private val playlistList: List<String> = mutableListOf()
-    private lateinit var dialog: MaterialAlertDialogBuilder
+    private lateinit var dialog: AlertDialog
     private val viewModel by viewModel<CreatePlaylistViewModel>()
     private var _binding: FragmentPlaylistCreateBinding? = null
     private val binding get() = _binding!!
@@ -75,6 +69,7 @@ class CreatePlaylistFragment : Fragment() {
         activity?.onBackPressedDispatcher?.addCallback(viewLifecycleOwner, callback)
     }
 
+    @SuppressLint("ShowToast")
     private fun setupListeners() {
         binding.back.setOnClickListener {
             if (isNoData()) {
@@ -86,10 +81,12 @@ class CreatePlaylistFragment : Fragment() {
         binding.btCreateNew.setOnClickListener { button ->
             if (button.isEnabled) {
                 findNavController().popBackStack()
-                Toast.makeText(
+                val message = "Плейлист ${binding.playlistNameEditText.text} создан"
+                Snackbar.make(
                     requireContext(),
-                    "Плейлист ${binding.playlistNameEditText.text} создан",
-                    Toast.LENGTH_SHORT
+                    binding.btCreateNew,
+                    message,
+                    Snackbar.LENGTH_SHORT
                 ).show()
             }
             viewModel.createPlaylist(
@@ -124,18 +121,18 @@ class CreatePlaylistFragment : Fragment() {
             override fun afterTextChanged(p0: Editable?) {
             }
         }
-        binding.playlistNameEditText.addTextChangedListener (textWatcherName)
+        binding.playlistNameEditText.addTextChangedListener(textWatcherName)
 
         val textWatcherDescription = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-               if (count > 0) {
-                   binding.playlistDescriptionTextInputLayout.setInputBoxColor(R.drawable.box_layout_selected)
-               } else {
-                   binding.playlistDescriptionTextInputLayout.setInputBoxColor(R.drawable.box_layout_unselected)
-               }
+                if (count > 0) {
+                    binding.playlistDescriptionTextInputLayout.setInputBoxColor(R.drawable.box_layout_selected)
+                } else {
+                    binding.playlistDescriptionTextInputLayout.setInputBoxColor(R.drawable.box_layout_unselected)
+                }
             }
 
             override fun afterTextChanged(s: Editable?) {
@@ -183,7 +180,8 @@ class CreatePlaylistFragment : Fragment() {
     }
 
     private fun setupDialog() {
-        dialog = MaterialAlertDialogBuilder(requireContext())
+        val builder: AlertDialog.Builder = AlertDialog.Builder(context)
+        builder
             .setTitle("Завершить создание плейлиста?")
             .setMessage("Все несохраненные данные будут потеряны")
             .setNeutralButton("Отмена") { _, _ ->
@@ -191,6 +189,7 @@ class CreatePlaylistFragment : Fragment() {
             .setPositiveButton("Завершить") { _, _ ->
                 findNavController().popBackStack()
             }
+        dialog = builder.create()
     }
 
     private fun isNoData(): Boolean {

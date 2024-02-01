@@ -30,7 +30,14 @@
     <fragment
         android:id="@+id/createPlaylistFragment"
         android:name="com.example.playlistmaker.library.playlists.ui.CreatePlaylistFragment"
-        android:label="CreatePlaylistFragment" />
+        android:label="CreatePlaylistFragment" >
+        <action
+            android:id="@+id/action_createPlaylistFragment_to_playerFragment"
+            app:destination="@id/playerFragment" />
+        <action
+            android:id="@+id/action_createPlaylistFragment_to_playlistFragment"
+            app:destination="@id/playlistFragment" />
+    </fragment>
     <fragment
         android:id="@+id/playlistFragment"
         android:name="com.example.playlistmaker.library.playlists.ui.PlaylistFragment"
