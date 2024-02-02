@@ -19,9 +19,9 @@ class TrackViewHolder(parentView: ViewGroup, private val clickListener: TrackCli
             .inflate(R.layout.track_view, parentView, false)
     ) {
 
-    private val ivSongCover: ImageView = itemView.findViewById(R.id.songCover)
-    private val tvSongName: TextView = itemView.findViewById(R.id.songName)
-    private val tvSongArtist: TextView = itemView.findViewById(R.id.songArtist)
+    private val ivSongCover: ImageView = itemView.findViewById(R.id.playlistCover)
+    private val tvSongName: TextView = itemView.findViewById(R.id.playlistName)
+    private val tvSongArtist: TextView = itemView.findViewById(R.id.playlistSize)
     private val tvSongDuration: TextView = itemView.findViewById(R.id.songDuration)
 
 
