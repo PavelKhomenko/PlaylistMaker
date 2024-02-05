@@ -11,7 +11,7 @@ class PlaylistDbConverter(private val gson: Gson) {
 
     fun map(playlist: Playlist): PlaylistEntity =
         PlaylistEntity(
-            id = 0,
+            id = playlist.id,
             playlistName = playlist.playlistName,
             playlistDescription = playlist.playlistDescription ?: "",
             playlistUri = playlist.playlistUri,
@@ -19,14 +19,14 @@ class PlaylistDbConverter(private val gson: Gson) {
             playlistSize = playlist.playlistSize
         )
 
-    fun map(playlist: PlaylistEntity) : Playlist {
-        val typeToken = object : TypeToken<List<String>>(){}.type
+    fun map(playlist: PlaylistEntity): Playlist {
+        val typeToken = object : TypeToken<List<String>>() {}.type
         return Playlist(
             id = playlist.id,
             playlistName = playlist.playlistName,
             playlistDescription = playlist.playlistDescription,
             playlistUri = playlist.playlistUri,
-            playlistTracks = gson.fromJson(playlist.playlistTracks,typeToken),
+            playlistTracks = gson.fromJson(playlist.playlistTracks, typeToken),
             playlistSize = playlist.playlistSize
         )
     }
@@ -35,12 +35,26 @@ class PlaylistDbConverter(private val gson: Gson) {
         TrackForPlaylistEntity(
             trackId = track.trackId,
             artworkUrl100 = track.artworkUrl100,
-            trackName =  track.trackName,
+            trackName = track.trackName,
             artistName = track.artistName,
             collectionName = track.collectionName,
             releaseDate = track.releaseDate,
             primaryGenreName = track.primaryGenreName,
-            country =  track.country,
+            country = track.country,
+            trackTime = track.trackTime,
+            previewUrl = track.previewUrl
+        )
+
+    fun map(track: TrackForPlaylistEntity): Track =
+        Track(
+            trackId = track.trackId,
+            artworkUrl100 = track.artworkUrl100,
+            trackName = track.trackName,
+            artistName = track.artistName,
+            collectionName = track.collectionName,
+            releaseDate = track.releaseDate,
+            primaryGenreName = track.primaryGenreName,
+            country = track.country,
             trackTime = track.trackTime,
             previewUrl = track.previewUrl
         )

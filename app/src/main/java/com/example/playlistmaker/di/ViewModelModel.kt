@@ -2,6 +2,7 @@ package com.example.playlistmaker.di
 
 import com.example.playlistmaker.application.App
 import com.example.playlistmaker.library.favorites.presentation.FavoritesViewModel
+import com.example.playlistmaker.library.playlistDetails.presentation.PlaylistDetailsViewModel
 import com.example.playlistmaker.library.playlists.presentation.CreatePlaylistViewModel
 import com.example.playlistmaker.library.playlists.presentation.PlaylistViewModel
 import com.example.playlistmaker.player.presentation.PlayerViewModel
@@ -24,4 +25,5 @@ val viewModelModule = module {
     viewModel { FavoritesViewModel(favoritesInteractor = get()) }
     viewModel { PlaylistViewModel(get()) }
     viewModel { CreatePlaylistViewModel(get()) }
+    viewModel {PlaylistDetailsViewModel(get(), get())}
 }
