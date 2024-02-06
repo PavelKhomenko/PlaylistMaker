@@ -25,6 +25,7 @@ import com.example.playlistmaker.utils.Const.PLAYLIST_KEY
 import com.example.playlistmaker.utils.ConvertUlits
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.snackbar.Snackbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class PlaylistDetailsFragment : Fragment() {
@@ -116,10 +117,12 @@ class PlaylistDetailsFragment : Fragment() {
 
     private fun sharePlaylist() {
         if (playlist.playlistTracks.isEmpty()) {
-            Toast.makeText(
+            val message = "В этом плейлисте нет списка треков, которым можно поделиться"
+            Snackbar.make(
                 requireContext(),
-                "В этом плейлисте нет списка треков, которым можно поделиться",
-                Toast.LENGTH_SHORT
+                binding.bottomSheetWithTracks,
+                message,
+                Snackbar.LENGTH_SHORT
             ).show()
         } else {
             val shareIntentLink = Intent(Intent.ACTION_SEND).apply {
