@@ -151,13 +151,15 @@
         }
 
         private fun setupAdapters() {
-            trackAdapter = TrackAdapter {
+            trackAdapter = TrackAdapter ()
+            trackAdapter.onItemClick = {
                 viewModel.addTrackToSearchHistory(it)
                 onClickDebounce(it)
             }
             rvTrack.adapter = trackAdapter
 
-            historyTracksAdapter = TrackAdapter {
+            historyTracksAdapter = TrackAdapter()
+            historyTracksAdapter.onItemClick = {
                 viewModel.addTrackToSearchHistory(it)
                 onClickDebounce(it)
             }

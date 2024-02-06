@@ -8,8 +8,10 @@ import com.example.playlistmaker.library.playlistDetails.domain.api.PlaylistDeta
 import com.example.playlistmaker.library.playlists.domain.api.PlaylistInteractor
 import com.example.playlistmaker.library.playlists.domain.model.Playlist
 import com.example.playlistmaker.player.domain.model.Track
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class PlaylistDetailsViewModel(
     val playlistInteractor: PlaylistInteractor,
@@ -30,9 +32,19 @@ class PlaylistDetailsViewModel(
         viewModelScope.launch {
             playlistDetailsInteractor
                 .getTracksFromPlaylist(playlist.playlistTracks)
-                .collect{
+                .collect {
                     trackLiveData.value = it
                 }
+        }
+    }
+
+    fun deleteTrack(trackId: String, playlistId: Int) {
+        viewModelScope.launch(Dispatchers.IO) {
+            playlistInteractor.deleteCurrentTrackFromPlaylist(trackId, playlistId).collect {
+                withContext(Dispatchers.Main) {
+                    trackLiveData.value = it
+                }
+            }
         }
     }
 }

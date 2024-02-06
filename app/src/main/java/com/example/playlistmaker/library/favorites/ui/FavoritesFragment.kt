@@ -21,7 +21,6 @@ import com.example.playlistmaker.search.ui.SearchFragment
 import com.example.playlistmaker.search.ui.SearchFragment.Companion.CLICK_DEBOUNCE_DELAY
 import com.example.playlistmaker.search.ui.SearchFragment.Companion.SEARCH_INPUT_KEY
 import com.example.playlistmaker.search.ui.TrackAdapter
-import com.example.playlistmaker.search.ui.TrackClickListener
 import com.example.playlistmaker.utils.debounce
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -74,7 +73,8 @@ class FavoritesFragment : Fragment() {
     }
 
     private fun setupAdapters() {
-        trackAdapter = TrackAdapter {
+        trackAdapter = TrackAdapter()
+        trackAdapter.onItemClick = {
             onClickDebounce(it)
         }
         binding.recyclerLiked.adapter = trackAdapter

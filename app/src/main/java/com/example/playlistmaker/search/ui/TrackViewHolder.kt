@@ -13,7 +13,7 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 
 
-class TrackViewHolder(parentView: ViewGroup, private val clickListener: TrackClickListener) :
+class TrackViewHolder(parentView: ViewGroup) :
     RecyclerView.ViewHolder(
         LayoutInflater.from(parentView.context)
             .inflate(R.layout.track_view, parentView, false)
