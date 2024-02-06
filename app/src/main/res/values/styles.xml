@@ -131,5 +131,12 @@
         <item name="itemIconTint">@color/bottom_nav_color_selector</item>
         <item name="itemTextColor">@color/bottom_nav_color_selector</item>
     </style>
+    
+    <style name="tvMenuBottomSheetStyle">
+        <item name="textInputStyle">@font/ys_display_medium</item>
+        <item name="android:textSize">@dimen/text_16sp</item>
+        <item name="android:layout_marginStart">@dimen/margin_16dp</item>
+        <item name="android:layout_marginVertical">21dp</item>
+    </style>
 
 </resources>

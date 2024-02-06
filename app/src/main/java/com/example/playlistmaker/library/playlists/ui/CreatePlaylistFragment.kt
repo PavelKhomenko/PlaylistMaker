@@ -23,7 +23,6 @@ import com.example.playlistmaker.databinding.FragmentPlaylistCreateBinding
 import com.example.playlistmaker.library.playlists.domain.model.Playlist
 import com.example.playlistmaker.library.playlists.presentation.CreatePlaylistViewModel
 import com.example.playlistmaker.utils.MediaNameGenerator
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputLayout
 import org.koin.androidx.viewmodel.ext.android.viewModel

@@ -13,12 +13,14 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentPlaylistDetailsBinding
 import com.example.playlistmaker.library.playlistDetails.presentation.PlaylistDetailsViewModel
 import com.example.playlistmaker.library.playlists.domain.model.Playlist
 import com.example.playlistmaker.player.domain.model.Track
 import com.example.playlistmaker.player.ui.BottomSheetAdapter
+import com.example.playlistmaker.player.ui.PlayerFragment
 import com.example.playlistmaker.search.ui.SearchFragment.Companion.SEARCH_INPUT_KEY
 import com.example.playlistmaker.search.ui.TrackAdapter
 import com.example.playlistmaker.utils.Const.PLAYLIST_KEY
@@ -37,13 +39,13 @@ class PlaylistDetailsFragment : Fragment() {
     private lateinit var trackAdapter: TrackAdapter
 
     //private lateinit var bottomSheetAdapter: BottomSheetAdapter
-    //private lateinit var bottomSheetBehavior: BottomSheetBehavior<LinearLayout>
+    private lateinit var bottomSheetBehavior: BottomSheetBehavior<LinearLayout>
     private lateinit var dialog: MaterialAlertDialogBuilder
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentPlaylistDetailsBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -87,7 +89,23 @@ class PlaylistDetailsFragment : Fragment() {
     }
 
     private fun setupBottomSheet() {
+        bottomSheetBehavior = BottomSheetBehavior.from(binding.menuBottomSheet).apply {
+            state = BottomSheetBehavior.STATE_HIDDEN
+        }
+        bottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+                when (newState) {
+                    BottomSheetBehavior.STATE_HIDDEN -> {
+                        binding.overlay.visibility = View.GONE
+                    }
+                    else -> binding.overlay.visibility = View.VISIBLE
+                }
+            }
 
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {
+                binding.overlay.alpha = slideOffset + 1
+            }
+        })
     }
 
     private fun setupAdapters() {
@@ -98,8 +116,23 @@ class PlaylistDetailsFragment : Fragment() {
         binding.back.setOnClickListener {
             findNavController().popBackStack()
         }
-        binding.sharePlaylist.setOnClickListener { sharePlaylist() }
-
+        binding.btSharePlaylist.setOnClickListener { sharePlaylist() }
+        binding.btOptionPlaylist.setOnClickListener{
+            Glide.with(requireActivity())
+                .load(playlist.playlistUri)
+                .placeholder(R.drawable.placeholder).centerInside()
+                .transform(RoundedCorners(this.resources.getDimensionPixelSize(R.dimen.margin_8dp)))
+                .into(binding.menuPlaylistCover)
+            binding.menuPlaylistName.text = playlist.playlistName
+            binding.menuPlaylistSize.text = ConvertUlits().convertSizeToString(playlist.playlistSize)
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
+        }
+        binding.tvMenuSharePlaylist.setOnClickListener { sharePlaylist() }
+        binding.tvDeletePlaylist.setOnClickListener{
+            viewModel.deletePlaylist(playlist)
+            findNavController().popBackStack()
+        }
+        binding.tvMenuChangeInfo.setOnClickListener{}
     }
 
     private fun initView(view: View) {

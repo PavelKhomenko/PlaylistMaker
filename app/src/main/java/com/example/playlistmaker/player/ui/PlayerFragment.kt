@@ -24,6 +24,7 @@ import com.example.playlistmaker.player.presentation.PlayerStatus
 import com.example.playlistmaker.player.presentation.PlayerViewModel
 import com.example.playlistmaker.search.ui.SearchFragment.Companion.SEARCH_INPUT_KEY
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.snackbar.Snackbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -112,15 +113,21 @@ class PlayerFragment : Fragment() {
         bottomSheetAdapter = BottomSheetAdapter { playlist ->
             viewModel.isInsidePlaylist(track, playlist)
             if (isInsidePlaylist) {
-                Toast.makeText(
-                    context, "Трек уже добавлен в плейлист ${playlist.playlistName}",
-                    Toast.LENGTH_SHORT
+                val message = "Трек уже добавлен в плейлист ${playlist.playlistName}"
+                Snackbar.make(
+                    requireContext(),
+                    binding.albumName,
+                    message,
+                    Snackbar.LENGTH_SHORT
                 ).show()
             } else {
                 bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-                Toast.makeText(
-                    context, "Добавлено в плейлист ${playlist.playlistName}",
-                    Toast.LENGTH_SHORT
+                val message = "Добавлено в плейлист ${playlist.playlistName}"
+                Snackbar.make(
+                    requireContext(),
+                    binding.albumName,
+                    message,
+                    Snackbar.LENGTH_SHORT
                 ).show()
                 viewModel.updatePlaylist(track, playlist)
                 viewModel.addTrackInPlaylist(track)
