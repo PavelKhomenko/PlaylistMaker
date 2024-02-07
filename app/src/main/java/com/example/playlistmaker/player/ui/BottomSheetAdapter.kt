@@ -3,7 +3,6 @@ package com.example.playlistmaker.player.ui
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.library.playlists.domain.model.Playlist
-import com.example.playlistmaker.library.playlists.ui.PlaylistViewHolder
 
 class BottomSheetAdapter(private val itemClickListener: PlaylistClickListener):
     RecyclerView.Adapter<BottomSheetViewHolder>() {

@@ -5,8 +5,8 @@ import com.example.playlistmaker.search.data.dto.TrackSearchResponse
 import com.example.playlistmaker.search.data.dto.TracksSearchRequest
 import com.example.playlistmaker.search.data.network.NetworkClient
 import com.example.playlistmaker.search.data.sharedPreferences.SearchStorage
-import com.example.playlistmaker.utils.Resource
 import com.example.playlistmaker.search.domain.api.TracksRepository
+import com.example.playlistmaker.utils.Resource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
