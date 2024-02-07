@@ -1,7 +1,6 @@
     package com.example.playlistmaker.search.ui
 
     import android.content.Context
-    import android.content.Intent
     import android.os.Bundle
     import android.view.LayoutInflater
     import android.view.View
@@ -23,13 +22,10 @@
     import com.example.playlistmaker.R
     import com.example.playlistmaker.databinding.FragmentSearchBinding
     import com.example.playlistmaker.player.domain.model.Track
-    import com.example.playlistmaker.player.ui.PlayerFragment
     import com.example.playlistmaker.search.presentation.SearchState
     import com.example.playlistmaker.search.presentation.SearchStatus
     import com.example.playlistmaker.search.presentation.SearchViewModel
     import com.example.playlistmaker.utils.debounce
-    import kotlinx.coroutines.delay
-    import kotlinx.coroutines.launch
     import org.koin.androidx.viewmodel.ext.android.viewModel
 
     class SearchFragment : Fragment() {
@@ -62,7 +58,7 @@
             inflater: LayoutInflater,
             container: ViewGroup?,
             savedInstanceState: Bundle?
-        ): View? {
+        ): View {
             _binding = FragmentSearchBinding.inflate(inflater, container, false)
             return binding.root
         }

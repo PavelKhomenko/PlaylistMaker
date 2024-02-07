@@ -1,15 +1,15 @@
 package com.example.playlistmaker.library.playlistDetails.ui
 
-import android.app.AlertDialog
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
-import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
@@ -19,8 +19,6 @@ import com.example.playlistmaker.databinding.FragmentPlaylistDetailsBinding
 import com.example.playlistmaker.library.playlistDetails.presentation.PlaylistDetailsViewModel
 import com.example.playlistmaker.library.playlists.domain.model.Playlist
 import com.example.playlistmaker.player.domain.model.Track
-import com.example.playlistmaker.player.ui.BottomSheetAdapter
-import com.example.playlistmaker.player.ui.PlayerFragment
 import com.example.playlistmaker.search.ui.SearchFragment.Companion.SEARCH_INPUT_KEY
 import com.example.playlistmaker.search.ui.TrackAdapter
 import com.example.playlistmaker.utils.Const.PLAYLIST_KEY
@@ -37,10 +35,7 @@ class PlaylistDetailsFragment : Fragment() {
     private lateinit var playlist: Playlist
     private lateinit var trackInPlaylist: List<Track>
     private lateinit var trackAdapter: TrackAdapter
-
-    //private lateinit var bottomSheetAdapter: BottomSheetAdapter
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<LinearLayout>
-    private lateinit var dialog: MaterialAlertDialogBuilder
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -67,14 +62,17 @@ class PlaylistDetailsFragment : Fragment() {
                 )
             }
             trackAdapter.onItemLongClick = {
-                dialog = MaterialAlertDialogBuilder(requireContext())
-                    .setTitle("Хотите удалить трек?")
-                    .setNegativeButton("Нет") { _, _ ->
-                    }
-                    .setPositiveButton("Да") { _, _ ->
+                createConfirmationDialog(
+                    requireContext(),
+                    "Хотите удалить трек?",
+                    "Да",
+                    "Нет",
+                    {
                         viewModel.deleteTrack(it.trackId, playlist.id)
-                    }
-                dialog.show()
+                    },
+                    {
+                        //no action
+                    })
             }
             trackAdapter.tracks.clear()
             trackAdapter.tracks.addAll(tracks)
@@ -83,7 +81,6 @@ class PlaylistDetailsFragment : Fragment() {
             trackAdapter.notifyDataSetChanged()
         }
         initView(view)
-        setupAdapters()
         initListeners(playlist)
         setupBottomSheet()
     }
@@ -92,12 +89,14 @@ class PlaylistDetailsFragment : Fragment() {
         bottomSheetBehavior = BottomSheetBehavior.from(binding.menuBottomSheet).apply {
             state = BottomSheetBehavior.STATE_HIDDEN
         }
-        bottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+        bottomSheetBehavior.addBottomSheetCallback(object :
+            BottomSheetBehavior.BottomSheetCallback() {
             override fun onStateChanged(bottomSheet: View, newState: Int) {
                 when (newState) {
                     BottomSheetBehavior.STATE_HIDDEN -> {
                         binding.overlay.visibility = View.GONE
                     }
+
                     else -> binding.overlay.visibility = View.VISIBLE
                 }
             }
@@ -108,31 +107,47 @@ class PlaylistDetailsFragment : Fragment() {
         })
     }
 
-    private fun setupAdapters() {
-
-    }
-
     private fun initListeners(playlist: Playlist) {
         binding.back.setOnClickListener {
             findNavController().popBackStack()
         }
         binding.btSharePlaylist.setOnClickListener { sharePlaylist() }
-        binding.btOptionPlaylist.setOnClickListener{
+        binding.btOptionPlaylist.setOnClickListener {
             Glide.with(requireActivity())
                 .load(playlist.playlistUri)
                 .placeholder(R.drawable.placeholder).centerInside()
                 .transform(RoundedCorners(this.resources.getDimensionPixelSize(R.dimen.margin_8dp)))
                 .into(binding.menuPlaylistCover)
             binding.menuPlaylistName.text = playlist.playlistName
-            binding.menuPlaylistSize.text = ConvertUlits().convertSizeToString(playlist.playlistSize)
+            binding.menuPlaylistSize.text =
+                ConvertUlits().convertSizeToString(playlist.playlistSize)
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
         }
         binding.tvMenuSharePlaylist.setOnClickListener { sharePlaylist() }
-        binding.tvDeletePlaylist.setOnClickListener{
-            viewModel.deletePlaylist(playlist)
-            findNavController().popBackStack()
+        binding.tvDeletePlaylist.setOnClickListener {
+            createConfirmationDialog(
+                requireContext(),
+                "Хотите удалить плейлист ${playlist.playlistName}?",
+                "Да",
+                "Нет",
+                {
+                    viewModel.deletePlaylist(playlist)
+                    findNavController().popBackStack()
+                },
+                {
+                    //no action
+                })
         }
-        binding.tvMenuChangeInfo.setOnClickListener{}
+        binding.tvMenuChangeInfo.setOnClickListener {
+            val navOptions = NavOptions.Builder()
+                .setPopUpTo(R.id.playlistDetailsFragment, true) // Замените R.id.editPlaylistFragment на идентификатор вашего фрагмента
+                .build()
+            findNavController().navigate(
+                R.id.action_playlistDetailsFragment_to_editPlaylistFragment,
+                createArg(playlist), navOptions
+            )
+
+        }
     }
 
     private fun initView(view: View) {
@@ -145,7 +160,6 @@ class PlaylistDetailsFragment : Fragment() {
         binding.playlistName.text = playlist.playlistName
         binding.playlistDescription.text = playlist.playlistDescription
         binding.playlistSize.text = ConvertUlits().convertSizeToString(playlist.playlistSize)
-
     }
 
     private fun sharePlaylist() {
@@ -177,5 +191,29 @@ class PlaylistDetailsFragment : Fragment() {
             )
         }
         return dataToShare.joinToString("\n")
+    }
+
+    private fun createConfirmationDialog(
+        context: Context,
+        title: String,
+        positiveButtonText: String,
+        negativeButtonText: String,
+        positiveAction: () -> Unit,
+        negativeAction: () -> Unit
+    ) {
+        MaterialAlertDialogBuilder(context)
+            .setTitle(title)
+            .setNegativeButton(negativeButtonText) { _, _ ->
+                negativeAction.invoke()
+            }
+            .setPositiveButton(positiveButtonText) { _, _ ->
+                positiveAction.invoke()
+            }
+            .show()
+    }
+    companion object {
+        fun createArg(playlist: Playlist) : Bundle {
+           return bundleOf(PLAYLIST_KEY to playlist)
+        }
     }
 }

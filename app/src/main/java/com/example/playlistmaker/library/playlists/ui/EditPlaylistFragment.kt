@@ -1,6 +1,5 @@
 package com.example.playlistmaker.library.playlists.ui
 
-import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -16,12 +15,16 @@ import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.net.toUri
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
+import com.bumptech.glide.Glide
 import com.example.playlistmaker.R
-import com.example.playlistmaker.databinding.FragmentPlaylistCreateBinding
+import com.example.playlistmaker.databinding.FragmentPlaylistEditBinding
 import com.example.playlistmaker.library.playlists.domain.model.Playlist
-import com.example.playlistmaker.library.playlists.presentation.CreatePlaylistViewModel
+import com.example.playlistmaker.library.playlists.presentation.EditPlaylistViewModel
+import com.example.playlistmaker.utils.Const.PLAYLIST_KEY
 import com.example.playlistmaker.utils.MediaNameGenerator
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputLayout
@@ -29,13 +32,13 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.File
 import java.io.FileOutputStream
 
-class CreatePlaylistFragment : Fragment() {
-
+class EditPlaylistFragment : Fragment() {
+    private lateinit var playlist: Playlist
     private var addUri: Uri? = null
     private val playlistList: List<String> = mutableListOf()
     private lateinit var dialog: AlertDialog
-    private val viewModel by viewModel<CreatePlaylistViewModel>()
-    private var _binding: FragmentPlaylistCreateBinding? = null
+    private val viewModel by viewModel<EditPlaylistViewModel>()
+    private var _binding: FragmentPlaylistEditBinding? = null
     private val binding get() = _binding!!
 
     override fun onCreateView(
@@ -43,61 +46,77 @@ class CreatePlaylistFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentPlaylistCreateBinding.inflate(inflater, container, false)
+        _binding = FragmentPlaylistEditBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupDialog()
-        photoPicker()
         setupTextWatcher()
+        photoPicker()
         setupListeners()
+        playlist = requireArguments().getSerializable(PLAYLIST_KEY)!!as Playlist
+        viewModel.getData(playlist)
+        viewModel.getplaylistLiveData().observe(viewLifecycleOwner) {
+            binding.playlistNameEditText.setText(playlist.playlistName)
+            binding.playlistDescriptionEditText.setText(playlist.playlistDescription)
+            Glide.with(requireActivity())
+                .load(playlist.playlistUri)
+                .placeholder(R.drawable.placeholder)
+                .centerCrop()
+                .into(binding.ivPlaylistCoverEdit)
+        }
         viewModel.getButtonLiveData().observe(viewLifecycleOwner) {
-            binding.btCreateNew.isEnabled = it
+            binding.btEditPlaylist.isEnabled = it
         }
         val callback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 if (isNoData()) {
                     dialog.show()
                 } else {
-                    findNavController().popBackStack()
+                   findNavController().navigate(R.id.action_editPlaylistFragment_to_playlistDetailsFragment,
+                    createArg(playlist))
                 }
             }
         }
         activity?.onBackPressedDispatcher?.addCallback(viewLifecycleOwner, callback)
     }
 
-    @SuppressLint("ShowToast")
     private fun setupListeners() {
         binding.back.setOnClickListener {
-            if (isNoData()) {
-                dialog.show()
-            } else {
-                findNavController().popBackStack()
-            }
+            findNavController().navigate(R.id.action_editPlaylistFragment_to_playlistDetailsFragment,
+                createArg(playlist))
         }
-        binding.btCreateNew.setOnClickListener { button ->
+        binding.btEditPlaylist.setOnClickListener { button ->
+            var tempPlayist: Playlist? = null
             if (button.isEnabled) {
-                findNavController().popBackStack()
-                val message = "Плейлист ${binding.playlistNameEditText.text} создан"
+                if (addUri == null)
+                    addUri = Uri.parse(playlist.playlistUri)
+                tempPlayist = playlist.copy(
+                    id = playlist.id,
+                    playlistName = binding.playlistNameEditText.text.toString(),
+                    playlistDescription = binding.playlistDescriptionEditText.text.toString(),
+                    playlistUri = addUri.toString(),
+                    playlistTracks = playlist.playlistTracks,
+                    playlistSize = playlist.playlistSize
+                )
+                viewModel.editPlaylist(tempPlayist)
+                val navOptions = NavOptions.Builder()
+                    .setPopUpTo(R.id.editPlaylistFragment, true) // Замените R.id.editPlaylistFragment на идентификатор вашего фрагмента
+                    .build()
+                findNavController().navigate(
+                    R.id.action_editPlaylistFragment_to_playlistDetailsFragment,
+                    createArg(tempPlayist), navOptions
+                )
+                val message = "Плейлист ${binding.playlistNameEditText.text} сохранён"
                 Snackbar.make(
                     requireContext(),
-                    binding.btCreateNew,
+                    binding.btEditPlaylist,
                     message,
                     Snackbar.LENGTH_SHORT
                 ).show()
             }
-            viewModel.createPlaylist(
-                Playlist(
-                    id = 0,
-                    playlistName = binding.playlistNameEditText.text.toString(),
-                    playlistDescription = binding.playlistDescriptionEditText.text.toString(),
-                    playlistUri = addUri.toString(),
-                    playlistTracks = playlistList,
-                    playlistSize = playlistList.size
-                )
-            )
         }
     }
 
@@ -151,11 +170,11 @@ class CreatePlaylistFragment : Fragment() {
             registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
                 if (uri != null) {
                     val mediaName = MediaNameGenerator.generateName()
-                    binding.playlistCover.setImageURI(uri)
+                    binding.ivPlaylistCoverEdit.setImageURI(uri)
                     addUri = saveImageToPrivateStorage(uri, mediaName)
                 }
             }
-        binding.playlistCover.setOnClickListener {
+        binding.ivPlaylistCoverEdit.setOnClickListener {
             pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
         }
     }
@@ -181,7 +200,7 @@ class CreatePlaylistFragment : Fragment() {
     private fun setupDialog() {
         val builder: AlertDialog.Builder = AlertDialog.Builder(context)
         builder
-            .setTitle("Завершить создание плейлиста?")
+            .setTitle("Завершить изменение плейлиста?")
             .setMessage("Все несохраненные данные будут потеряны")
             .setNeutralButton("Отмена") { _, _ ->
             }
@@ -195,5 +214,9 @@ class CreatePlaylistFragment : Fragment() {
         return (addUri != null
                 || binding.playlistNameEditText.text.isNotEmpty()
                 || binding.playlistDescriptionEditText.text.isNotEmpty())
+    }
+
+    fun createArg(playlist: Playlist) : Bundle {
+        return bundleOf(PLAYLIST_KEY to playlist)
     }
 }
