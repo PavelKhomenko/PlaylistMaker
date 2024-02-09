@@ -30,10 +30,9 @@
             android:id="@+id/back"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/transparent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/playlistCover"
+            app:layout_constraintStart_toStartOf="@id/playlistCover"
+            app:layout_constraintTop_toTopOf="@id/playlistCover"
             app:navigationIcon="@drawable/back_arrow" />
 
         <ImageView
