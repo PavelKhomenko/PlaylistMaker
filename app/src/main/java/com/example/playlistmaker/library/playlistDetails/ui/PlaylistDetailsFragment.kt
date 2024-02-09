@@ -201,7 +201,7 @@ class PlaylistDetailsFragment : Fragment() {
         positiveAction: () -> Unit,
         negativeAction: () -> Unit
     ) {
-        MaterialAlertDialogBuilder(context)
+        MaterialAlertDialogBuilder(context, R.style.MyDialogTheme)
             .setTitle(title)
             .setNegativeButton(negativeButtonText) { _, _ ->
                 negativeAction.invoke()

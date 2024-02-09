@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
@@ -23,6 +24,7 @@ import com.example.playlistmaker.databinding.FragmentPlaylistCreateBinding
 import com.example.playlistmaker.library.playlists.domain.model.Playlist
 import com.example.playlistmaker.library.playlists.presentation.CreatePlaylistViewModel
 import com.example.playlistmaker.utils.MediaNameGenerator
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputLayout
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -33,7 +35,7 @@ class CreatePlaylistFragment : Fragment() {
 
     private var addUri: Uri? = null
     private val playlistList: List<String> = mutableListOf()
-    private lateinit var dialog: AlertDialog
+    private lateinit var dialog: MaterialAlertDialogBuilder
     private val viewModel by viewModel<CreatePlaylistViewModel>()
     private var _binding: FragmentPlaylistCreateBinding? = null
     private val binding get() = _binding!!
@@ -179,16 +181,14 @@ class CreatePlaylistFragment : Fragment() {
     }
 
     private fun setupDialog() {
-        val builder: AlertDialog.Builder = AlertDialog.Builder(context)
-        builder
-            .setTitle("Завершить создание плейлиста?")
+        dialog = MaterialAlertDialogBuilder(requireContext(), R.style.MyDialogTheme)
+            .setTitle("Завершить создание плейлиста?",)
             .setMessage("Все несохраненные данные будут потеряны")
             .setNeutralButton("Отмена") { _, _ ->
             }
             .setPositiveButton("Завершить") { _, _ ->
                 findNavController().popBackStack()
             }
-        dialog = builder.create()
     }
 
     private fun isNoData(): Boolean {
