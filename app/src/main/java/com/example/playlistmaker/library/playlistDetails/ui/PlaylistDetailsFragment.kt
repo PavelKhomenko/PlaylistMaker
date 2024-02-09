@@ -140,7 +140,7 @@ class PlaylistDetailsFragment : Fragment() {
         }
         binding.tvMenuChangeInfo.setOnClickListener {
             val navOptions = NavOptions.Builder()
-                .setPopUpTo(R.id.playlistDetailsFragment, true) // Замените R.id.editPlaylistFragment на идентификатор вашего фрагмента
+                .setPopUpTo(R.id.playlistDetailsFragment, true)
                 .build()
             findNavController().navigate(
                 R.id.action_playlistDetailsFragment_to_editPlaylistFragment,

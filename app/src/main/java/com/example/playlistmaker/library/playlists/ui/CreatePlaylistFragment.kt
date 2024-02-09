@@ -31,14 +31,14 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.File
 import java.io.FileOutputStream
 
-class CreatePlaylistFragment : Fragment() {
+open class CreatePlaylistFragment : Fragment() {
 
-    private var addUri: Uri? = null
-    private val playlistList: List<String> = mutableListOf()
+    var addUri: Uri? = null
+    val playlistList: List<String> = mutableListOf()
     private lateinit var dialog: MaterialAlertDialogBuilder
-    private val viewModel by viewModel<CreatePlaylistViewModel>()
-    private var _binding: FragmentPlaylistCreateBinding? = null
-    private val binding get() = _binding!!
+    open val viewModel by viewModel<CreatePlaylistViewModel>()
+    var _binding: FragmentPlaylistCreateBinding? = null
+    val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -71,7 +71,7 @@ class CreatePlaylistFragment : Fragment() {
     }
 
     @SuppressLint("ShowToast")
-    private fun setupListeners() {
+    open fun setupListeners() {
         binding.back.setOnClickListener {
             if (isNoData()) {
                 dialog.show()
@@ -103,7 +103,7 @@ class CreatePlaylistFragment : Fragment() {
         }
     }
 
-    private fun setupTextWatcher() {
+    open fun setupTextWatcher() {
 
         val textWatcherName = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -120,6 +120,9 @@ class CreatePlaylistFragment : Fragment() {
             }
 
             override fun afterTextChanged(p0: Editable?) {
+                if (p0.isNullOrEmpty()) {
+                    viewModel.hasPlaylistName(false)
+                } else viewModel.hasPlaylistName(true)
             }
         }
         binding.playlistNameEditText.addTextChangedListener(textWatcherName)
@@ -148,7 +151,7 @@ class CreatePlaylistFragment : Fragment() {
         this.setBoxStrokeColorStateList(resources.getColorStateList(colorId, null))
     }
 
-    private fun photoPicker() {
+    open fun photoPicker() {
         val pickMedia =
             registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
                 if (uri != null) {
@@ -162,7 +165,7 @@ class CreatePlaylistFragment : Fragment() {
         }
     }
 
-    private fun saveImageToPrivateStorage(uri: Uri, mediaName: String): Uri {
+    fun saveImageToPrivateStorage(uri: Uri, mediaName: String): Uri {
         val filePath =
             File(requireContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES), "myalbum")
 
@@ -182,7 +185,7 @@ class CreatePlaylistFragment : Fragment() {
 
     private fun setupDialog() {
         dialog = MaterialAlertDialogBuilder(requireContext(), R.style.MyDialogTheme)
-            .setTitle("Завершить создание плейлиста?",)
+            .setTitle("Завершить создание плейлиста?")
             .setMessage("Все несохраненные данные будут потеряны")
             .setNeutralButton("Отмена") { _, _ ->
             }

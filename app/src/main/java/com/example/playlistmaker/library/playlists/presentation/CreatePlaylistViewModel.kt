@@ -8,7 +8,7 @@ import com.example.playlistmaker.library.playlists.domain.api.PlaylistInteractor
 import com.example.playlistmaker.library.playlists.domain.model.Playlist
 import kotlinx.coroutines.launch
 
-class CreatePlaylistViewModel(private val playlistInteractor: PlaylistInteractor) : ViewModel() {
+open class CreatePlaylistViewModel(val playlistInteractor: PlaylistInteractor) : ViewModel() {
 
     private val buttonStatusLiveData = MutableLiveData<Boolean>()
     fun getButtonLiveData(): LiveData<Boolean> = buttonStatusLiveData
