@@ -32,7 +32,7 @@ class PlaylistDetailsViewModel(
             playlistDetailsInteractor
                 .getTracksFromPlaylist(playlist.playlistTracks)
                 .collect {
-                    trackLiveData.value = it
+                    trackLiveData.value = it.reversed()
                 }
         }
     }
