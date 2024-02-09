@@ -26,15 +26,6 @@
             android:orientation="vertical"
             app:layout_constraintGuide_end="@dimen/margin_16dp" />
 
-        <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/back"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="@id/playlistCover"
-            app:layout_constraintStart_toStartOf="@id/playlistCover"
-            app:layout_constraintTop_toTopOf="@id/playlistCover"
-            app:navigationIcon="@drawable/back_arrow" />
-
         <ImageView
             android:id="@+id/playlistCover"
             android:layout_width="0dp"
@@ -45,6 +36,14 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:src="@drawable/placeholder" />
 
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/back"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:navigationIcon="@drawable/back_arrow"
+            app:navigationIconTint="@color/yp_black"/>
         <TextView
             android:id="@+id/playlistName"
             style="@style/TextHead"
