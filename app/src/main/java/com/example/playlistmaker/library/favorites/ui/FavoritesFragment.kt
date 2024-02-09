@@ -44,14 +44,14 @@ class FavoritesFragment : Fragment() {
         viewModel.observeState().observe(viewLifecycleOwner) { state ->
             when (state) {
                 FavoritesState.Empty -> {
-                    binding.FavoritesEmpty.visibility = View.GONE
-                    binding.recyclerLiked.visibility = View.VISIBLE
+                    binding.FavoritesEmpty.visibility = View.VISIBLE
+                    binding.recyclerLiked.visibility = View.GONE
                 }
 
                 is FavoritesState.Content -> {
                     binding.FavoritesEmpty.visibility = View.GONE
                     binding.recyclerLiked.visibility = View.VISIBLE
-                    content(state.tracks)
+                    content(state.favoriteTracks)
                 }
             }
         }
@@ -77,6 +77,7 @@ class FavoritesFragment : Fragment() {
         trackAdapter.tracks.clear()
         trackAdapter.tracks.addAll(liked)
         trackAdapter.notifyDataSetChanged()
+
     }
 
     companion object {

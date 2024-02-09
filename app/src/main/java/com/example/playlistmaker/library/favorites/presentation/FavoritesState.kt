@@ -5,7 +5,7 @@ import com.example.playlistmaker.player.domain.model.Track
 sealed interface FavoritesState {
 
     data class Content(
-        val tracks: List<Track>
+        val favoriteTracks: List<Track>
     ) : FavoritesState
 
     object Empty : FavoritesState
