@@ -34,4 +34,5 @@
     <string name="share_playlist">Поделиться</string>
     <string name="change_info_playlist">Редактировать информацию</string>
     <string name="delete_playlist">Удалить плейлист</string>
+    <string name="emptyPlaylist">Добавьте треки в плейлист \nдля их отображения</string>
 </resources>

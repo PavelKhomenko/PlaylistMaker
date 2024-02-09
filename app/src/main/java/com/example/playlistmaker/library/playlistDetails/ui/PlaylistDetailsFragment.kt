@@ -160,6 +160,9 @@ class PlaylistDetailsFragment : Fragment() {
         binding.playlistName.text = playlist.playlistName
         binding.playlistDescription.text = playlist.playlistDescription
         binding.playlistSize.text = ConvertUlits().convertSizeToString(playlist.playlistSize)
+        if (playlist.playlistTracks.isEmpty()) {
+            binding.emptyPlaylistPlaceholder.visibility = View.VISIBLE
+        } else binding.emptyPlaylistPlaceholder.visibility = View.GONE
     }
 
     private fun sharePlaylist() {
@@ -211,9 +214,10 @@ class PlaylistDetailsFragment : Fragment() {
             }
             .show()
     }
+
     companion object {
-        fun createArg(playlist: Playlist) : Bundle {
-           return bundleOf(PLAYLIST_KEY to playlist)
+        fun createArg(playlist: Playlist): Bundle {
+            return bundleOf(PLAYLIST_KEY to playlist)
         }
     }
 }

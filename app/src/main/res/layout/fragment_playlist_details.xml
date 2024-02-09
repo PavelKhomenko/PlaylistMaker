@@ -163,6 +163,24 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
+        <LinearLayout
+            android:id="@+id/emptyPlaylistPlaceholder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="visible">
+            <ImageView
+                style="@style/ErrorImageStyle"
+                android:paddingTop="@dimen/dp_30"
+                android:src="@drawable/nothing_found">
+            </ImageView>
+            <TextView
+                style="@style/ErrorTextStyle"
+                android:text="@string/emptyPlaylist"
+                android:textAlignment="center">
+            </TextView>
+        </LinearLayout>
+
     </LinearLayout>
 
     <LinearLayout
