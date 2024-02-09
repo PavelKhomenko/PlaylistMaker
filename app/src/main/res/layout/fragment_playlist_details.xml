@@ -10,7 +10,7 @@
         android:id="@+id/constraintLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/yp_white">
+        android:background="@color/yp_light_gray">
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/left_guideline"
