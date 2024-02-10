@@ -68,11 +68,12 @@
             initView()
             setupAdapters()
             setupListeners()
-
+            if (viewModel.getTracksFromSearchHistory().isEmpty()) {
+                setStatus(SearchStatus.ALL_GONE)
+            } else setStatus(SearchStatus.HISTORY)
             viewModel.observeState().observe(viewLifecycleOwner) {
                 render(it)
             }
-
             onClickDebounce =
                 debounce(CLICK_DEBOUNCE_DELAY, viewLifecycleOwner.lifecycleScope, false, action = {
                     findNavController().navigate(
