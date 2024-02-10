@@ -94,20 +94,6 @@ class EditPlaylistFragment : CreatePlaylistFragment() {
         activity?.onBackPressedDispatcher?.addCallback(viewLifecycleOwner, callback)
     }
 
-    override fun photoPicker() {
-        val pickMedia =
-            registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
-                if (uri != null) {
-                    val mediaName = MediaNameGenerator.generateName()
-                    binding.playlistCover.setImageURI(uri)
-                    addUri = saveImageToPrivateStorage(uri, mediaName)
-                }
-            }
-        binding.playlistCover.setOnClickListener {
-            pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
-        }
-    }
-
     private fun setupUI() {
         viewModel.getplaylistLiveData().observe(viewLifecycleOwner) {
             binding.playlistNameEditText.setText(playlist.playlistName)
