@@ -100,7 +100,6 @@ class EditPlaylistFragment : CreatePlaylistFragment() {
                 if (uri != null) {
                     val mediaName = MediaNameGenerator.generateName()
                     binding.playlistCover.setImageURI(uri)
-                    viewModel.getData(playlist.copy(playlistUri = addUri.toString()))
                     addUri = saveImageToPrivateStorage(uri, mediaName)
                 }
             }
