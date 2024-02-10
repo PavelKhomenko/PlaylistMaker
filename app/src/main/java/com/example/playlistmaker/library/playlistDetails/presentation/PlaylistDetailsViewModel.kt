@@ -41,7 +41,7 @@ class PlaylistDetailsViewModel(
         viewModelScope.launch(Dispatchers.IO) {
             playlistInteractor.deleteCurrentTrackFromPlaylist(trackId, playlistId).collect {
                 withContext(Dispatchers.Main) {
-                    trackLiveData.value = it
+                    trackLiveData.value = it.reversed()
                 }
             }
         }
