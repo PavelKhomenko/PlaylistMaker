@@ -3,8 +3,6 @@ package com.example.playlistmaker.library.playlists.ui
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.library.playlists.domain.model.Playlist
-import com.example.playlistmaker.search.ui.TrackViewHolder
-
 
 class PlaylistAdapter(private val itemClickListener: PlaylistClickListener):
     RecyclerView.Adapter<PlaylistViewHolder>() {

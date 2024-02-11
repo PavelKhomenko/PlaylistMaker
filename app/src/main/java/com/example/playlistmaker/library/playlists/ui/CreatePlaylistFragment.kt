@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
@@ -30,20 +31,20 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.File
 import java.io.FileOutputStream
 
-class CreatePlaylistFragment : Fragment() {
+open class CreatePlaylistFragment : Fragment() {
 
-    private var addUri: Uri? = null
-    private val playlistList: List<String> = mutableListOf()
-    private lateinit var dialog: AlertDialog
-    private val viewModel by viewModel<CreatePlaylistViewModel>()
-    private var _binding: FragmentPlaylistCreateBinding? = null
-    private val binding get() = _binding!!
+    var addUri: Uri? = null
+    val playlistList: List<String> = mutableListOf()
+    private lateinit var dialog: MaterialAlertDialogBuilder
+    open val viewModel by viewModel<CreatePlaylistViewModel>()
+    var _binding: FragmentPlaylistCreateBinding? = null
+    val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentPlaylistCreateBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -70,7 +71,7 @@ class CreatePlaylistFragment : Fragment() {
     }
 
     @SuppressLint("ShowToast")
-    private fun setupListeners() {
+    open fun setupListeners() {
         binding.back.setOnClickListener {
             if (isNoData()) {
                 dialog.show()
@@ -102,7 +103,7 @@ class CreatePlaylistFragment : Fragment() {
         }
     }
 
-    private fun setupTextWatcher() {
+    open fun setupTextWatcher() {
 
         val textWatcherName = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -119,6 +120,9 @@ class CreatePlaylistFragment : Fragment() {
             }
 
             override fun afterTextChanged(p0: Editable?) {
+                if (p0.isNullOrEmpty()) {
+                    viewModel.hasPlaylistName(false)
+                } else viewModel.hasPlaylistName(true)
             }
         }
         binding.playlistNameEditText.addTextChangedListener(textWatcherName)
@@ -147,7 +151,7 @@ class CreatePlaylistFragment : Fragment() {
         this.setBoxStrokeColorStateList(resources.getColorStateList(colorId, null))
     }
 
-    private fun photoPicker() {
+    open fun photoPicker() {
         val pickMedia =
             registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
                 if (uri != null) {
@@ -161,7 +165,7 @@ class CreatePlaylistFragment : Fragment() {
         }
     }
 
-    private fun saveImageToPrivateStorage(uri: Uri, mediaName: String): Uri {
+    fun saveImageToPrivateStorage(uri: Uri, mediaName: String): Uri {
         val filePath =
             File(requireContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES), "myalbum")
 
@@ -180,8 +184,7 @@ class CreatePlaylistFragment : Fragment() {
     }
 
     private fun setupDialog() {
-        val builder: AlertDialog.Builder = AlertDialog.Builder(context)
-        builder
+        dialog = MaterialAlertDialogBuilder(requireContext(), R.style.MyDialogTheme)
             .setTitle("Завершить создание плейлиста?")
             .setMessage("Все несохраненные данные будут потеряны")
             .setNeutralButton("Отмена") { _, _ ->
@@ -189,7 +192,6 @@ class CreatePlaylistFragment : Fragment() {
             .setPositiveButton("Завершить") { _, _ ->
                 findNavController().popBackStack()
             }
-        dialog = builder.create()
     }
 
     private fun isNoData(): Boolean {

@@ -1,22 +1,16 @@
 package com.example.playlistmaker.player.ui
 
+import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import android.os.Bundle
-import android.view.View
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.TextView
-import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
-import com.example.playlistmaker.databinding.FragmentLibraryBinding
 import com.example.playlistmaker.databinding.FragmentPlayerBinding
 import com.example.playlistmaker.library.playlists.presentation.PlaylistState
 import com.example.playlistmaker.player.domain.model.Track
@@ -24,6 +18,7 @@ import com.example.playlistmaker.player.presentation.PlayerStatus
 import com.example.playlistmaker.player.presentation.PlayerViewModel
 import com.example.playlistmaker.search.ui.SearchFragment.Companion.SEARCH_INPUT_KEY
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.snackbar.Snackbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -43,7 +38,7 @@ class PlayerFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentPlayerBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -112,15 +107,21 @@ class PlayerFragment : Fragment() {
         bottomSheetAdapter = BottomSheetAdapter { playlist ->
             viewModel.isInsidePlaylist(track, playlist)
             if (isInsidePlaylist) {
-                Toast.makeText(
-                    context, "Трек уже добавлен в плейлист ${playlist.playlistName}",
-                    Toast.LENGTH_SHORT
+                val message = "Трек уже добавлен в плейлист ${playlist.playlistName}"
+                Snackbar.make(
+                    requireContext(),
+                    binding.albumName,
+                    message,
+                    Snackbar.LENGTH_SHORT
                 ).show()
             } else {
                 bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-                Toast.makeText(
-                    context, "Добавлено в плейлист ${playlist.playlistName}",
-                    Toast.LENGTH_SHORT
+                val message = "Добавлено в плейлист ${playlist.playlistName}"
+                Snackbar.make(
+                    requireContext(),
+                    binding.albumName,
+                    message,
+                    Snackbar.LENGTH_SHORT
                 ).show()
                 viewModel.updatePlaylist(track, playlist)
                 viewModel.addTrackInPlaylist(track)

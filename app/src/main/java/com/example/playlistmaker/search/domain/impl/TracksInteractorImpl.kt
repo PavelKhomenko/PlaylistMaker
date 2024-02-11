@@ -1,12 +1,11 @@
 package com.example.playlistmaker.search.domain.impl
 
 import com.example.playlistmaker.player.domain.model.Track
-import com.example.playlistmaker.utils.Resource
 import com.example.playlistmaker.search.domain.api.TracksInteractor
 import com.example.playlistmaker.search.domain.api.TracksRepository
+import com.example.playlistmaker.utils.Resource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import java.util.concurrent.Executors
 
 class TracksInteractorImpl(private val repository: TracksRepository) : TracksInteractor {
 
